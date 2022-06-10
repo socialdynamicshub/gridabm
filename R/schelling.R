@@ -1,5 +1,11 @@
-library(dplyr)
-
+#' Find a random free cell in a Schelling run
+#'
+#' @param board The current state.
+#'
+#' @return A position on the board
+#' @export
+#'
+#' @examples
 random_free_pos <- function(board) {
   if (!(0 %in% board)) {
     print("There are no free positions.")
@@ -15,6 +21,15 @@ random_free_pos <- function(board) {
   return(pos)
 }
 
+#' Compute the happiness of each agent in a Schelling run
+#'
+#' @param board The current state.
+#' @param tolerance The tolerance level.
+#'
+#' @return A matrix with corresponding dimensions indicating agent happiness
+#' @export
+#'
+#' @examples
 get_happiness_mat <- function(board, tolerance) {
   axis_size <- dim(board)[1]
   happiness <- matrix(1, nrow = axis_size, ncol = axis_size)
@@ -41,7 +56,17 @@ get_happiness_mat <- function(board, tolerance) {
   return(happiness)
 }
 
-move_agents <- function(board, happiness) {
+#' Step the Schelling model
+#'
+#' @param board The current state.
+#' @param tolerance The tolerance level.
+#'
+#' @return The updated state
+#' @export
+#'
+#' @examples
+schelling_step <- function(board, tolerance) {
+  happiness <- get_happiness_mat(board, tolerance)
   board_upd <- board
   for (i in 1:20) {
     for (j in 1:20) {
@@ -52,57 +77,31 @@ move_agents <- function(board, happiness) {
       }
     }
   }
+
   return(board_upd)
 }
 
+#' Run the Schelling model for a specified number of steps
+#'
+#' @param initial_state The initial state of the board.
+#' @param tolerance The tolerance level.
+#' @param steps How many steps to run the model.
+#'
+#' @return A dataframe with the simulation results.
+#' @export
+#'
+#' @examples
 schelling_game <- function(initial_state, tolerance, steps) {
-
   board <- initial_state
   d <- board_to_df(board)
   d$step <- 0
-  d$cell_id <- 1:nrow(d)
   for (i in 1:steps) {
-    happiness <- get_happiness_mat(board, tolerance)
-    board <- move_agents(board, happiness)
+    board <- schelling_step(board, tolerance)
     d_step <- board_to_df(board)
     d_step$step <- i
-    d_step$cell_id <- 1:nrow(d_step)
     d <- dplyr::bind_rows(d, d_step)
   }
   d <- dplyr::select(d, step, cell_id, row, col, state)
-  d$row <- as.numeric(d$row)
-  d$col <- as.numeric(d$col)
-  d$cell_id <- as.factor(d$cell_id)
-  d$state <- as.factor(d$state)
-
-  return(d)
-}
-
-schelling_game_multi <- function(initial_state, param_levels, steps) {
-  d <- data.frame()
-
-  for (tol in param_levels) {
-    board <- initial_state
-    d_tol <- board_to_df(board)
-    d_tol$step <- 0
-    d_tol$cell_id <- seq(1, length(board))
-    for (i in 1:steps) {
-      happiness <- get_happiness_mat(board, tol)
-      board <- move_agents(board, happiness)
-      d_tol_step <- board_to_df(board)
-      d_tol_step$step <- i
-      d_tol_step$cell_id <- seq(1, length(board))
-      d_tol <- dplyr::bind_rows(d_tol, d_tol_step)
-    }
-    d_tol$row <- as.numeric(d_tol$row)
-    d_tol$col <- as.numeric(d_tol$col)
-    d_tol$cell_id <- as.factor(d_tol$cell_id)
-    d_tol$state <- as.factor(d_tol$state)
-    d_tol$tolerance <- tol
-    d_tol$tolerance <- as.numeric(d_tol$tolerance)
-    d_tol <- dplyr::select(d_tol, tolerance, step, cell_id, row, col, state)
-    d <- dplyr::bind_rows(d, d_tol)
-  }
 
   return(d)
 }

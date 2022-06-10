@@ -14,7 +14,7 @@ create_forest <- function(axis_size, tree_density) {
       replace = TRUE, size = axis_size^2),
     ncol = axis_size, nrow = axis_size
   )
-  forest[, 1] <- 2
+  forest[, 1] <- 2  # set forest on fire!
   return(forest)
 }
 
@@ -70,20 +70,13 @@ forest_fire_game <- function(initial_state, steps) {
   forest <- initial_state
   d <- board_to_df(forest)
   d$step <- 0
-  d$cell_id <- 1:nrow(d)
   for (i in 1:steps) {
-    forest_upd <- forest_fire_step(forest)
-    d_step <- board_to_df(forest_upd)
+    forest <- forest_fire_step(forest)
+    d_step <- board_to_df(forest)
     d_step$step <- i
-    d_step$cell_id <- 1:nrow(d_step)
     d <- dplyr::bind_rows(d, d_step)
-    forest <- forest_upd
   }
   d <- dplyr::select(d, step, cell_id, row, col, state)
-  d$row <- as.numeric(d$row)
-  d$col <- as.numeric(d$col)
-  d$cell_id <- as.factor(d$cell_id)
-  d$state <- as.factor(d$state)
 
   return(d)
 }

@@ -7,21 +7,35 @@
 #'
 #' @examples
 board_to_df <- function(m) {
+  warn <- getOption("warn")
+  options(warn = -1)  # switch off warnings temporarily
 
   axis_size <- dim(m)[1]
+
   d <- data.frame(m)
-  names(d) <- seq(1, axis_size)
-  d <- tidyr::pivot_longer(
-    d,
-    cols = names(d),
-    names_to = "col",
-    values_to = "state"
-  )
-  d$row <- rep(seq(1, axis_size), each = axis_size)
-  d <- dplyr::select(d, row, col, state)
-  d$row <- as.numeric(d$row)
-  d$col <- as.numeric(d$col)
-  d$state <- as.factor(d$state)
+  names(d) <- c(seq(1, axis_size))
+
+  d <- d %>%
+    dplyr::bind_cols(
+      data.frame(
+        row = seq(1, axis_size)
+      )
+    ) %>%
+    tidyr::pivot_longer(
+      d,
+      cols = seq(1, axis_size),
+      names_to = "col",
+      values_to = "state"
+    ) %>%
+    dplyr::mutate(
+      cell_id = as.factor(1:nrow(.)),
+      row = as.numeric(row),
+      col = as.numeric(col),
+      state = as.factor(state),
+    ) %>%
+    dplyr::select(cell_id, row, col, state)
+
+  options(warn = warn)  # switch warnings back on
 
   return(d)
 }
