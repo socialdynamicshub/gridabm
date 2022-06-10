@@ -1,3 +1,5 @@
+library(dplyr)
+
 #' Animate a model run
 #'
 #' @param df The simulation data.

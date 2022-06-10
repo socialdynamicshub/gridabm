@@ -1,3 +1,5 @@
+library(dplyr)
+
 #' Create a forest to burn
 #'
 #' @param axis_size Axis size of the forest.

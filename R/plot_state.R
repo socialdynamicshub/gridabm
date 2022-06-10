@@ -1,3 +1,5 @@
+library(dplyr)
+
 #' Plot a grid ABM state
 #'
 #' @param state A dataframe or a matrix representing the current state.

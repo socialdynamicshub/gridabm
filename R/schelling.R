@@ -1,4 +1,5 @@
-#' Find a random free cell in a Schelling run
+library(dplyr)
+
 #'
 #' @param board The current state.
 #'

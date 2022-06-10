@@ -1,3 +1,5 @@
+library(dplyr)
+
 #' One step in Conway's life
 #'
 #' @param m The current state.
