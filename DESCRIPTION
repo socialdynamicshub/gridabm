@@ -1,12 +1,11 @@
 Package: gridabm
-Title: What the Package Does (One Line, Title Case)
+Title: Grid Agent-Based Models
 Version: 0.0.0.9000
 Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"),
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
+    person("Johannes", "Nakayama", , "johannes.nakayama@rwth-aachen.com", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0001-9977-6471"))
+Description: Simple agent-based models that run on a grid graph. Mostly for didactic purposes to enable learners to directly experiment with simple models.
+License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.0.0
