@@ -1,0 +1,43 @@
+---
+title: "Grid Agent-Based Models"
+description: |
+  This article runs you through using the `gridabm` library to play around with 2D cellular automata or grid ABMs.
+author:
+  - name: Johannes Nakayama 
+    url: https://github.com/JohannesNakayama
+date: "`r Sys.Date()`"
+output: distill::distill_article
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(gridabm)
+```
+
+```{r, echo=TRUE}
+forest <- create_forest(20, 0.8)
+forest_results <- forest_fire_game(forest, 100)
+animate_model_run(forest_results, 5, c("white", "green", "red", "firebrick"))
+```
+
+
+```{r, echo=TRUE}
+life_board <- matrix(
+  sample(c(0, 1), prob = c(0.8, 0.2), replace = TRUE, size = 625),
+  nrow = 25, ncol = 25
+)
+life_results <- life_game(life_board, 100)
+animate_model_run(life_results, 4, c("white", "black"))
+```
+
+
+```{r, echo=TRUE}
+schelling_board <- matrix(
+  sample(c(0, 1, 2), prob = c(0.1, 0.45, 0.45), replace = TRUE, size = 400),
+  nrow = 20, ncol = 20
+)
+schelling_results <- schelling_game(schelling_board, 3, 100)
+animate_model_run(schelling_results, 5, c("white", "orange", "blue"))
+```
+
+
