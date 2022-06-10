@@ -1,9 +1,10 @@
 library(dplyr)
 
+#' Find a random free position in the Schelling game
 #'
 #' @param board The current state.
 #'
-#' @return A position on the board
+#' @return Coordinates of a random free position
 #' @export
 #'
 #' @examples

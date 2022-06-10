@@ -2,7 +2,7 @@
 % Please edit documentation in R/schelling.R
 \name{random_free_pos}
 \alias{random_free_pos}
-\title{Find a random free cell in a Schelling run}
+\title{Find a random free position in the Schelling game}
 \usage{
 random_free_pos(board)
 }
@@ -10,8 +10,8 @@ random_free_pos(board)
 \item{board}{The current state.}
 }
 \value{
-A position on the board
+Coordinates of a random free position
 }
 \description{
-Find a random free cell in a Schelling run
+Find a random free position in the Schelling game
 }

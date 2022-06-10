@@ -16,4 +16,5 @@ Imports:
     dplyr,
     gganimate,
     ggplot2,
+    magrittr,
     tidyr
