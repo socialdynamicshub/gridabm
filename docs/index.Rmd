@@ -10,7 +10,7 @@ output: distill::distill_article
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(echo = FALSE, fig.align = 'center')
 library(gridabm)
 library(ggplot2)
 library(readr)
@@ -57,7 +57,7 @@ $$
 
 ... corresponds to the following plot:
 
-```{r, echo=FALSE}
+```{r}
 mat <- t(
   matrix(
     c(
@@ -70,9 +70,91 @@ mat <- t(
     nrow = 5
   )
 )
-plot_state(mat, marker_size = 15, color_scheme = c("white", "black")) +
+plot_state(mat, marker_size = 18, color_scheme = c("white", "black")) +
   scale_x_continuous(limits = c(0.5, 5.5)) +
-  scale_y_continuous(limits = c(0.5, 5.5))
+  scale_y_continuous(limits = c(0.5, 5.5)) +
+  NULL
+```
+
+You can construct boards with more distinct states in the same way.
+
+Apart from a grid, a set of distinct states, and an initial state, in a cellular automaton, we need a so-called update rule.
+In **Agent-Based Modeling**, this is sometimes referred to as a *stepping function*.
+
+In the `gridabm` library, a stepping function is simply a function that takes a matrix with numeric states, performs the update rule, and returns the updated matrix.
+
+Let's examine this with a very simple example.
+We use a matrix with distinct states $0$ and $1$.
+Now we define an update rule as follows:
+
+> Each cell adopts the state of the cell to its right.
+
+We could implement this rule like this:
+
+```{r, echo=TRUE}
+left_shift_rule <- function(m) {
+  axis_size <- dim(m)[1]
+  m_upd <- m
+  
+  for (i in 1:axis_size) {
+    for (j in 1:axis_size) {
+      if (j < axis_size) {
+        new_j <- j + 1
+      } else {
+        new_j <- 1
+      }
+      m_upd[i, j] <- m[i, new_j] 
+    }
+  }
+  
+  return(m_upd)
+}
+```
+
+Now, let's create an initial state.
+To change things up, let's assign the color white to state $0$ and blue to state $1$
+
+```{r}
+left_shift_board <- matrix(
+  sample(c(0, 1), prob = c(0.7, 0.3), replace = TRUE, size = 400),
+  nrow = 20, ncol = 20
+)
+plot_state(left_shift_board, marker_size = 5, color_scheme = c("white", "blue"))
+```
+
+Running and animating this automaton works like this:
+
+```{r, echo=TRUE}
+left_shift_results <- run_automaton(
+  left_shift_board, steps = 100, stepfunc = left_shift_rule
+)
+animate_model_run(left_shift_results, marker_size = 5, color_scheme = c("white", "blue"))
+```
+
+The naming of the rule might have given it away already, but this rule just "shifts" everything to the left.
+This configuration might make this more clear:
+
+```{r}
+mat <- t(
+  matrix(
+    c(
+      c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+      c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+      c(0, 0, 0, 1, 0, 1, 0, 1, 0, 1),
+      c(0, 0, 0, 1, 0, 1, 0, 0, 0, 1),
+      c(0, 0, 0, 1, 1, 1, 0, 1, 0, 1),
+      c(0, 0, 0, 1, 0, 1, 0, 1, 0, 0),
+      c(0, 0, 0, 1, 0, 1, 0, 1, 0, 1),
+      c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+      c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+      c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+    ),
+    nrow = 10
+  )
+)
+plot_state(mat, 7, c("white", "blue"))
+left_shift_results <- run_automaton(mat, 100, left_shift_rule)
+animate_model_run(left_shift_results, 7, c("white", "blue"))
 ```
 
 
