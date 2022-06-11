@@ -152,11 +152,14 @@ mat <- t(
     nrow = 10
   )
 )
-plot_state(mat, 7, c("white", "blue"))
 left_shift_results <- run_automaton(mat, 100, left_shift_rule)
-animate_model_run(left_shift_results, 7, c("white", "blue"))
+animate_model_run(left_shift_results, 9, c("white", "blue"))
 ```
 
+
+
+
+## Simulating a Forest Fire
 
 
 ```{r, echo=FALSE}
@@ -186,7 +189,7 @@ animate_model_run(forest_results, 5, c("white", "green", "orange", "firebrick"))
 
 
 
-```{r, echo=TRUE, eval=FALSE}
+```{r, echo=TRUE}
 forest <- matrix(
   sample(c(0, 1, 2), prob = c(0.3, 0.68, 0.02), replace = TRUE, size = 10000),
   nrow = 100, ncol = 100
@@ -201,7 +204,7 @@ animate_model_run(forest_results, 1, c("white", "green", "orange", "firebrick"))
 
 
 
-```{r, echo=TRUE, eval=FALSE}
+```{r, echo=TRUE}
 life_board <- matrix(
   sample(c(0, 1), prob = c(0.8, 0.2), replace = TRUE, size = 625),
   nrow = 25, ncol = 25
@@ -212,7 +215,7 @@ animate_model_run(life_results, 4, c("white", "black"))
 
 
 
-```{r, echo=TRUE, eval=FALSE}
+```{r, echo=TRUE}
 schelling_board <- matrix(
   sample(c(0, 1, 2), prob = c(0.1, 0.45, 0.45), replace = TRUE, size = 400),
   nrow = 20, ncol = 20
@@ -223,7 +226,7 @@ animate_model_run(schelling_results, 5, c("white", "orange", "blue"))
 
 
 
-```{r, echo=TRUE, eval=FALSE}
+```{r, echo=TRUE}
 brians_brain_board <- matrix(
   sample(c(0, 1, 2), prob = c(0.5, 0.25, 0.25), replace = TRUE, size = 2500),
   nrow = 50, ncol = 50
