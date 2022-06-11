@@ -18,7 +18,7 @@ board_to_df <- function(m) {
   d <- d %>%
     dplyr::bind_cols(
       data.frame(
-        row = seq(1, axis_size)
+        row = seq(axis_size, 1, -1)
       )
     ) %>%
     tidyr::pivot_longer(
