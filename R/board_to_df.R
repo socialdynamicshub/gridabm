@@ -1,5 +1,3 @@
-library(dplyr)
-
 #' Turn a board matrix into a dataframe
 #'
 #' @param m A matrix

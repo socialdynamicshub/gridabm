@@ -1,5 +1,3 @@
-library(dplyr)
-
 #' One step in Conway's life
 #'
 #' @param m The current state.
@@ -37,27 +35,18 @@ life_step <- function(m) {
   return(m_upd)
 }
 
-#' Run Conway's life for a specified number of steps
-#'
-#' @param initial_state The initial state.
-#' @param steps How many steps to run the model for.
-#'
-#' @return A dataframe with the simulation results
-#' @export
-#'
-#' @examples
-life_game <- function(initial_state, steps) {
-
-  m <- initial_state
-  d <- board_to_df(m)
-  d$step <- 0
-  for (i in 1:steps) {
-    m <- life_step(m)
-    d_step <- board_to_df(m)
-    d_step$step <- i
-    d <- dplyr::bind_rows(d, d_step)
-  }
-  d <- dplyr::select(d, step, cell_id, row, col, state)
-
-  return(d)
-}
+# life_game <- function(initial_state, steps) {
+#
+#   m <- initial_state
+#   d <- board_to_df(m)
+#   d$step <- 0
+#   for (i in 1:steps) {
+#     m <- life_step(m)
+#     d_step <- board_to_df(m)
+#     d_step$step <- i
+#     d <- dplyr::bind_rows(d, d_step)
+#   }
+#   d <- dplyr::select(d, step, cell_id, row, col, state)
+#
+#   return(d)
+# }
