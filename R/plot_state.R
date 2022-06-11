@@ -20,7 +20,6 @@ plot_state <- function(state, marker_size, color_scheme) {
     ggplot2::ggplot(
       ggplot2::aes(x = col, y = row, fill = state, group = cell_id)
     ) +
-    # ggplot(aes(x = col, y = row, fill = state)) +  # TODO: add id in life
     ggplot2::geom_point(size = marker_size, shape = 22, color = "transparent") +
     ggplot2::scale_fill_manual(values = color_scheme) +
     ggplot2::scale_x_continuous(
@@ -28,7 +27,7 @@ plot_state <- function(state, marker_size, color_scheme) {
       breaks = seq(0, axis_size)
     ) +
     ggplot2::scale_y_continuous(
-      trans = "reverse",
+      # trans = "reverse",
       minor_breaks = seq(0.5, axis_size + 0.5, 1),
       breaks = seq(0, axis_size)
     ) +
