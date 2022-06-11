@@ -1,5 +1,3 @@
-library(dplyr)
-
 #' Get Von Neumann neighborhood of a specified cell
 #'
 #' @param i Row index

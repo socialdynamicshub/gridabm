@@ -1,5 +1,3 @@
-library(dplyr)
-
 #' Create a forest to burn
 #'
 #' @param axis_size Axis size of the forest.
@@ -58,27 +56,18 @@ forest_fire_step <- function(forest) {
   return(forest_upd)
 }
 
-#' Run the forest fire for a specified number of steps
-#'
-#' @param initial_state The initial forest.
-#' @param steps How many steps to run the model for.
-#'
-#' @return A dataframe with the tabular representation of the forest fire
-#' @export
-#'
-#' @examples
-forest_fire_game <- function(initial_state, steps) {
-
-  forest <- initial_state
-  d <- board_to_df(forest)
-  d$step <- 0
-  for (i in 1:steps) {
-    forest <- forest_fire_step(forest)
-    d_step <- board_to_df(forest)
-    d_step$step <- i
-    d <- dplyr::bind_rows(d, d_step)
-  }
-  d <- dplyr::select(d, step, cell_id, row, col, state)
-
-  return(d)
-}
+# forest_fire_game <- function(initial_state, steps) {
+#
+#   m <- initial_state
+#   d <- board_to_df(m)
+#   d$step <- 0
+#   for (i in 1:steps) {
+#     m <- forest_fire_step(m)
+#     d_step <- board_to_df(m)
+#     d_step$step <- i
+#     d <- dplyr::bind_rows(d, d_step)
+#   }
+#   d <- dplyr::select(d, step, cell_id, row, col, state)
+#
+#   return(d)
+# }

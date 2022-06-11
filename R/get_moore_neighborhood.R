@@ -1,5 +1,3 @@
-library(dplyr)
-
 #' Get the Moore neighborhood of a specified cell
 #'
 #' @param i Row index

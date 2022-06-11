@@ -1,5 +1,3 @@
-library(dplyr)
-
 #' Find a random free position in the Schelling game
 #'
 #' @param board The current state.
@@ -83,27 +81,17 @@ schelling_step <- function(board, tolerance) {
   return(board_upd)
 }
 
-#' Run the Schelling model for a specified number of steps
-#'
-#' @param initial_state The initial state of the board.
-#' @param tolerance The tolerance level.
-#' @param steps How many steps to run the model.
-#'
-#' @return A dataframe with the simulation results.
-#' @export
-#'
-#' @examples
-schelling_game <- function(initial_state, tolerance, steps) {
-  board <- initial_state
-  d <- board_to_df(board)
-  d$step <- 0
-  for (i in 1:steps) {
-    board <- schelling_step(board, tolerance)
-    d_step <- board_to_df(board)
-    d_step$step <- i
-    d <- dplyr::bind_rows(d, d_step)
-  }
-  d <- dplyr::select(d, step, cell_id, row, col, state)
-
-  return(d)
-}
+# schelling_game <- function(initial_state, tolerance, steps) {
+#   board <- initial_state
+#   d <- board_to_df(board)
+#   d$step <- 0
+#   for (i in 1:steps) {
+#     board <- schelling_step(board, tolerance)
+#     d_step <- board_to_df(board)
+#     d_step$step <- i
+#     d <- dplyr::bind_rows(d, d_step)
+#   }
+#   d <- dplyr::select(d, step, cell_id, row, col, state)
+#
+#   return(d)
+# }
