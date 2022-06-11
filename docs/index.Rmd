@@ -6,6 +6,7 @@ author:
   - name: Johannes Nakayama 
     url: https://github.com/JohannesNakayama
 date: "`r Sys.Date()`"
+bibliography: references.bib
 output: distill::distill_article
 ---
 
@@ -13,6 +14,7 @@ output: distill::distill_article
 knitr::opts_chunk$set(echo = FALSE, fig.align = 'center')
 library(gridabm)
 library(ggplot2)
+library(dplyr)
 library(readr)
 set.seed(420)
 ```
@@ -111,49 +113,48 @@ left_shift_rule <- function(m) {
 }
 ```
 
-Now, let's create an initial state.
+Now, let's create an initial state, run the simulation, and animate it.
 To change things up, let's assign the color white to state $0$ and blue to state $1$
 
-```{r}
+```{r, echo=TRUE}
 left_shift_board <- matrix(
   sample(c(0, 1), prob = c(0.7, 0.3), replace = TRUE, size = 400),
   nrow = 20, ncol = 20
 )
-plot_state(left_shift_board, marker_size = 5, color_scheme = c("white", "blue"))
-```
-
-Running and animating this automaton works like this:
-
-```{r, echo=TRUE}
 left_shift_results <- run_automaton(
   left_shift_board, steps = 100, stepfunc = left_shift_rule
 )
-animate_model_run(left_shift_results, marker_size = 5, color_scheme = c("white", "blue"))
+animate_model_run(
+  left_shift_results, marker_size = 5, color_scheme = c("white", "blue")
+)
 ```
 
-The naming of the rule might have given it away already, but this rule just "shifts" everything to the left.
-This configuration might make this more clear:
+The code above is the general workflow of `gridabm`.
 
-```{r}
-mat <- t(
-  matrix(
-    c(
-      c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-      c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-      c(0, 0, 0, 1, 0, 1, 0, 1, 0, 1),
-      c(0, 0, 0, 1, 0, 1, 0, 0, 0, 1),
-      c(0, 0, 0, 1, 1, 1, 0, 1, 0, 1),
-      c(0, 0, 0, 1, 0, 1, 0, 1, 0, 0),
-      c(0, 0, 0, 1, 0, 1, 0, 1, 0, 1),
-      c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-      c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-      c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
-    ),
-    nrow = 10
-  )
+First, you create a state that you want to start from.
+It's a simple `matrix` with several distinct states.
+
+```{r, echo=TRUE, eval=FALSE}
+left_shift_board <- matrix(
+  sample(c(0, 1), prob = c(0.7, 0.3), replace = TRUE, size = 400),
+  nrow = 20, ncol = 20
 )
-left_shift_results <- run_automaton(mat, 100, left_shift_rule)
-animate_model_run(left_shift_results, 9, c("white", "blue"))
+```
+
+Then, you run the automaton with the step function (`stepfunc`) that you defined before.
+
+```{r, echo=TRUE, eval=FALSE}
+left_shift_results <- run_automaton(
+  left_shift_board, steps = 100, stepfunc = left_shift_rule
+)
+```
+
+The results can be animated with the convenience function `animate_model_run`.
+
+```{r, echo=TRUE, eval=FALSE}
+animate_model_run(
+  left_shift_results, marker_size = 5, color_scheme = c("white", "blue")
+)
 ```
 
 
@@ -161,14 +162,55 @@ animate_model_run(left_shift_results, 9, c("white", "blue"))
 
 ## Simulating a Forest Fire
 
+Several well-known cellular automata (or agent-based model, depending on how you view it) are implemented in this package.
+One of them is the so-called forest fire simulation [@drossel1992selforganized].
+
+Let's first create a board.
+For the forest fire, there is a convenience function because there is a specific way this model is usually setup.
+
+```{r, echo=TRUE}
+forest <- create_forest(axis_size = 20, tree_density = 0.7)
+plot_state(
+  forest,
+  marker_size = 5,
+  color_scheme = c("white", "green", "orange", "firebrick")
+)
+```
+
+The color coding is intended to mimic an actual forest fire:
+Green cells are trees, orange cells are trees on fire, dark red (`firebrick`) cells are burnt trees, and white cells are empty.
+You can see in the plot that the trees on the left of the board are all on fire and the rest of the trees are scattered across the board.
+
+In the `create_forest` convenience function, we set up a parameter `tree_density`.
+This is just the probability with which a tree is put on each cell.
+An example of a sparser forest would look like this:
+
+```{r}
+create_forest(axis_size = 20, tree_density = 0.3) %>% 
+  plot_state(
+    marker_size = 5, color_scheme = c("white", "green", "orange", "firebrick")
+  )
+```
+
+... and a more dense one would look like this:
+
+```{r}
+create_forest(axis_size = 20, tree_density = 0.9) %>% 
+  plot_state(
+    marker_size = 5, color_scheme = c("white", "green", "orange", "firebrick")
+  )
+```
+
+The stepping function for the forest fire is called `forest_fire_step`.
+You can run and animate the automaton like this:
 
 ```{r, echo=FALSE}
-if (!file.exists("forest_results.RDS")) {
+if (!file.exists("forest_1_results.RDS")) {
   forest <- create_forest(20, 0.7)
   forest_results <- run_automaton(forest, 100, forest_fire_step)
-  readr::write_rds(forest_results, "forest_results.RDS")  
+  readr::write_rds(forest_results, "forest_1_results.RDS")  
 } else {
-  forest_results <- readr::read_rds("forest_results.RDS")
+  forest_results <- readr::read_rds("forest_1_results.RDS")
 }
 ```
 
@@ -182,11 +224,80 @@ animate_model_run(forest_results, 5, c("white", "green", "orange", "firebrick"))
 animate_model_run(forest_results, 5, c("white", "green", "orange", "firebrick"))
 ```
 
+As you can see, a wall of fire runs through the forest pretty quickly.
+
+Let's see, how this looks like in a less dense forest.
+
+```{r, echo=FALSE}
+if (!file.exists("forest_2_results.RDS")) {
+  forest <- create_forest(20, 0.3)
+  forest_results <- run_automaton(forest, 100, forest_fire_step)
+  readr::write_rds(forest_results, "forest_2_results.RDS")  
+} else {
+  forest_results <- readr::read_rds("forest_2_results.RDS")
+}
+```
+
+```{r, echo=TRUE, eval=FALSE}
+forest <- create_forest(20, 0.3)
+forest_results <- run_automaton(forest, 100, forest_fire_step)
+animate_model_run(forest_results, 5, c("white", "green", "orange", "firebrick"))
+```
+
+```{r, echo=FALSE}
+animate_model_run(forest_results, 5, c("white", "green", "orange", "firebrick"))
+```
+
+The fire doesn't run through the entire forest, but stops almost immediately.
+
+Let's look how tree density is related to the percentage of the forest burnt after the fire has run its course.
+
+```{r, fig.width=8, fig.height=12}
+d <- data.frame()
+for (density in seq(0.1, 0.9, 0.1)) {
+  forest <- create_forest(20, density)
+  forest_results <- run_automaton(forest, 100, forest_fire_step)
+  forest_results$density <- density
+  d <- dplyr::bind_rows(d, forest_results)
+}
+
+d %>% 
+  filter(step <= 40) %>% 
+  filter((state == 1) | (state == 3)) %>% 
+  group_by(density, step, state) %>% 
+  summarize(count = n()) %>% 
+  ungroup() %>% 
+  group_by(density, step) %>% 
+  mutate(forest_size = sum(count)) %>% 
+  ungroup() %>% 
+  mutate(relfreq = count / forest_size) %>% 
+  mutate(burnt = state == 3) %>% 
+  ggplot(aes(x = step, y = relfreq, color = burnt)) +
+  geom_line() +
+  geom_point(shape = 21, fill = "white") +
+  scale_y_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1)) + 
+  scale_color_manual(values = c("green", "firebrick")) +
+  facet_wrap(. ~ density, ncol = 1) +
+  labs(
+    color = "Burnt",
+    x = "Step",
+    y = "Relative Frequency"
+  ) +
+  theme(
+    panel.background = element_rect(fill = "white", color = "lightgrey"),
+    strip.background = element_rect(fill = "white", color = "transparent"),
+    panel.grid.major.x = element_line(color = "lightgrey"),
+    panel.grid.major.y = element_line(color = "lightgrey"),
+    axis.ticks = element_line(color = "lightgrey")
+  )
+```
 
 
 
 
+## Some Other Rules
 
+[Descriptions coming soon]
 
 
 ```{r, echo=TRUE}
