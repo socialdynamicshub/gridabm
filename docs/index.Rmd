@@ -13,16 +13,113 @@ output: distill::distill_article
 knitr::opts_chunk$set(echo = FALSE)
 library(gridabm)
 library(ggplot2)
+library(readr)
+set.seed(420)
 ```
 
-```{r, echo=TRUE}
-forest <- create_forest(20, 0.8)
+## Installation
+
+You will need the `remotes` library to install `gridabm` from Github.
+
+```{r, echo=TRUE, eval=FALSE}
+# install.packages("remotes")
+remotes::install_github("socialdynamicshub/gridabm")
+```
+
+
+## First Steps
+
+The `gridabm` library lets you play around with cellular automata on 2D grids.
+You can think of a grid just as a board of cells.
+
+```{r, echo=FALSE}
+matrix(rep(0, 400), nrow = 20) %>% 
+  plot_state(5, c("white")) +
+  labs(title = "A 20x20 grid")
+```
+
+In this library, the grid plotted above corresponds to a matrix with distinct numeric states.
+Let's for example create a matrix with the distinct states $0$ and $1$.
+Let's say state $0$ means that the cell is empty, so we assign it the color white.
+State $1$ represents "something" on the board, we'll assign it the color black.
+
+Then the following matrix...
+
+$$
+\begin{pmatrix}
+0 & 0 & 0 & 0 & 1\\
+0 & 1 & 0 & 0 & 1\\
+1 & 0 & 0 & 0 & 1\\
+0 & 1 & 1 & 0 & 0\\
+1 & 0 & 0 & 0 & 0
+\end{pmatrix}
+$$
+
+... corresponds to the following plot:
+
+```{r, echo=FALSE}
+mat <- t(
+  matrix(
+    c(
+      c(0, 0, 0, 0, 1),
+      c(0, 1, 0, 0, 1),
+      c(1, 0, 0, 0, 1),
+      c(0, 1, 1, 0, 0),
+      c(1, 0, 0, 0, 0)
+    ),
+    nrow = 5
+  )
+)
+plot_state(mat, marker_size = 15, color_scheme = c("white", "black")) +
+  scale_x_continuous(limits = c(0.5, 5.5)) +
+  scale_y_continuous(limits = c(0.5, 5.5))
+```
+
+
+
+```{r, echo=FALSE}
+if (!file.exists("forest_results.RDS")) {
+  forest <- create_forest(20, 0.7)
+  forest_results <- run_automaton(forest, 100, forest_fire_step)
+  readr::write_rds(forest_results, "forest_results.RDS")  
+} else {
+  forest_results <- readr::read_rds("forest_results.RDS")
+}
+```
+
+```{r, echo=TRUE, eval=FALSE}
+forest <- create_forest(20, 0.7)
 forest_results <- run_automaton(forest, 100, forest_fire_step)
-animate_model_run(forest_results, 5, c("white", "green", "red", "firebrick"))
+animate_model_run(forest_results, 5, c("white", "green", "orange", "firebrick"))
+```
+
+```{r, echo=FALSE}
+animate_model_run(forest_results, 5, c("white", "green", "orange", "firebrick"))
 ```
 
 
-```{r, echo=TRUE}
+
+
+
+
+
+
+```{r, echo=TRUE, eval=FALSE}
+forest <- matrix(
+  sample(c(0, 1, 2), prob = c(0.3, 0.68, 0.02), replace = TRUE, size = 10000),
+  nrow = 100, ncol = 100
+)
+forest_results <- run_automaton(forest, 200, forest_fire_step)
+animate_model_run(forest_results, 1, c("white", "green", "orange", "firebrick")) +
+  theme(
+    panel.grid.major = element_line(color = "white"),
+    panel.grid.minor = element_line(color = "white")
+  )
+```
+
+
+
+```{r, echo=TRUE, eval=FALSE}
 life_board <- matrix(
   sample(c(0, 1), prob = c(0.8, 0.2), replace = TRUE, size = 625),
   nrow = 25, ncol = 25
@@ -32,7 +129,8 @@ animate_model_run(life_results, 4, c("white", "black"))
 ```
 
 
-```{r, echo=TRUE}
+
+```{r, echo=TRUE, eval=FALSE}
 schelling_board <- matrix(
   sample(c(0, 1, 2), prob = c(0.1, 0.45, 0.45), replace = TRUE, size = 400),
   nrow = 20, ncol = 20
@@ -42,7 +140,8 @@ animate_model_run(schelling_results, 5, c("white", "orange", "blue"))
 ```
 
 
-```{r, echo=TRUE}
+
+```{r, echo=TRUE, eval=FALSE}
 brians_brain_board <- matrix(
   sample(c(0, 1, 2), prob = c(0.5, 0.25, 0.25), replace = TRUE, size = 2500),
   nrow = 50, ncol = 50
@@ -56,5 +155,6 @@ animate_model_run(brians_brain_results, 2, c("black", "white", "blue")) +
     panel.grid.minor = element_line(color = "black")
   )
 ```
+
 
 
