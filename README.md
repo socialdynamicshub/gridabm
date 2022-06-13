@@ -14,6 +14,22 @@ You can install `gridabm` from Github with the `remotes` library:
 remotes::install_github("socialdynamicshub/gridabm")
 ```
 
+## Basic Usage
+
+With the `gridabm` library, you can create and visualize automata in a few lines of code.
+
+```
+schelling_board <- matrix(
+    sample(c(0, 1, 2), prob = c(0.1, 0.45, 0.45), replace = TRUE, size = 400),
+    nrow = 20, ncol = 20
+)
+schelling_results <- run_automaton(schelling_board, steps = 100, stepfunc = schelling_step, tolerance = 3)
+animate_model_run(schelling_results, marker_size = 5, color_scheme = theme_schelling())
+```
+
+![example automaton](media/example.gif)
+
+
 ## How to Contribute
 
 This library is supposed remain lean.
