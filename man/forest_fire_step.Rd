@@ -2,16 +2,30 @@
 % Please edit documentation in R/forest_fire.R
 \name{forest_fire_step}
 \alias{forest_fire_step}
-\title{Run the forest model one step}
+\title{Run the forest fire model one step}
 \usage{
 forest_fire_step(forest)
 }
 \arguments{
-\item{forest}{A matrix representing a forest}
+\item{forest}{A \code{matrix} representing a forest.}
 }
 \value{
-The updated forest
+The updated forest.
 }
 \description{
-Run the forest model one step
+This function takes in a forest state and outputs the next state after
+applying the forest fire update rule.
+Check out \url{https://en.wikipedia.org/wiki/Forest-fire_model} for more
+information.
+}
+\examples{
+forest <- create_forest(20, 0.6)
+
+# Visualize the initial state
+plot_state(forest, 5, theme_forest_fire())
+
+next_state <- forest_fire_step(forest)
+
+# Visualize the subsequent state
+plot_state(next_state, 5, theme_forest_fire())
 }
