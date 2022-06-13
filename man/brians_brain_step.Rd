@@ -2,16 +2,34 @@
 % Please edit documentation in R/brians_brain.R
 \name{brians_brain_step}
 \alias{brians_brain_step}
-\title{One step in Brian's brain}
+\title{One step in the Brian's Brain automaton}
 \usage{
 brians_brain_step(m)
 }
 \arguments{
-\item{m}{The current state.}
+\item{m}{The current state of the automaton. This matrix should have three
+distinct states: 0, 1, and 2.}
 }
 \value{
-A matrix representing the subsequent state
+A matrix representing the subsequent state.
 }
 \description{
-One step in Brian's brain
+Brian's Brain is an automaton with three distinct states that produces some
+characteristic chaotic patterns.
+The function is usually given as the \code{stepfunc} argument to \code{run_automaton}.
+Check out \url{https://en.wikipedia.org/wiki/Brian's_Brain} for more information.
+}
+\examples{
+initial_state <- matrix(
+  sample(c(0, 1, 2), replace = TRUE, prob = c(0.5, 0.25, 0.25), 200),
+  nrow = 20, ncol = 20
+)
+
+# Visualization of the initial state
+plot_state(initial_state, 5, theme_brians_brain_light())
+
+next_state <- brians_brain_step(initial_state)
+
+# Visualization of the subsequent state
+plot_state(next_state, 5, theme_brians_brain_light())
 }

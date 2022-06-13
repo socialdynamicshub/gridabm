@@ -7,7 +7,7 @@
 theme_brians_brain_dark()
 }
 \value{
-A vector containing the color scheme
+A vector containing the color scheme.
 }
 \description{
 Dark theme for the Brian's Brain automaton

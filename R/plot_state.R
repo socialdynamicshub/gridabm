@@ -1,14 +1,14 @@
 #' Plot a grid ABM state
 #'
-#' @param state A dataframe or a matrix representing the current state.
+#' @param state A `data.frame` or a matrix representing the current state.
 #' @param marker_size How big the markers on the plot should be.
 #' @param color_scheme What colors to use for each cell state.
 #'
-#' @return A ggplot2 object of the current state.
+#' @return A `ggplot2` object of the current state.
 #' @export
 #'
 #' @examples
-plot_state <- function(state, marker_size, color_scheme) {
+plot_state <- function(state, marker_size = 5, color_scheme = theme_default()) {
 
   if (is.matrix(state)) {
     state <- board_to_df(state)
