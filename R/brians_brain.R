@@ -25,6 +25,7 @@
 #' # Visualization of the subsequent state
 #' plot_state(next_state, 5, theme_brians_brain_light())
 brians_brain_step <- function(m) {
+
   axis_size <- dim(m)[1]
   m_upd <- matrix(nrow = axis_size, ncol = axis_size, rep(0, axis_size^2))
 
@@ -36,7 +37,12 @@ brians_brain_step <- function(m) {
       } else if (m[equator, meridian] == 1) {
         m_upd[equator, meridian] <- 2
       } else {
-        positions <- get_moore_neighborhood(equator, meridian, axis_size, periodic = TRUE)
+        positions <- get_moore_neighborhood(
+          equator,
+          meridian,
+          axis_size,
+          periodic = TRUE
+        )
         alive_neighbor_count <- 0
         for (pos in positions) {
           if (m[pos[1], pos[2]] == 1) {

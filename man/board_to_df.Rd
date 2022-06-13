@@ -2,18 +2,21 @@
 % Please edit documentation in R/board_to_df.R
 \name{board_to_df}
 \alias{board_to_df}
-\title{Turn an automaton state matrix into a \code{data.frame}}
+\title{Turn an automaton state \code{matrix} into a \code{data.frame}}
 \usage{
 board_to_df(m)
 }
 \arguments{
-\item{m}{A matrix representing an automaton state.}
+\item{m}{A \code{matrix} representing an automaton state.}
 }
 \value{
 The \code{data.frame} representation of the automaton state.
 }
 \description{
-Turn an automaton state matrix into a \code{data.frame}
+Automaton states are represented as \code{matrix} objects in the \code{gridabm}
+library.
+However, \code{data.frame}s are more easy to plot, so this function converts a
+\code{matrix} into a \code{data.frame}.
 }
 \examples{
 automaton_state <- matrix(

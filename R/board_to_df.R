@@ -1,6 +1,11 @@
-#' Turn an automaton state matrix into a `data.frame`
+#' Turn an automaton state `matrix` into a `data.frame`
 #'
-#' @param m A matrix representing an automaton state.
+#' Automaton states are represented as `matrix` objects in the `gridabm`
+#' library.
+#' However, `data.frame`s are more easy to plot, so this function converts a
+#' `matrix` into a `data.frame`.
+#'
+#' @param m A `matrix` representing an automaton state.
 #'
 #' @return The `data.frame` representation of the automaton state.
 #' @export

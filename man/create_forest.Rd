@@ -2,18 +2,27 @@
 % Please edit documentation in R/forest_fire.R
 \name{create_forest}
 \alias{create_forest}
-\title{Create a forest to burn}
+\title{Convenience function to create an initial state for the forest fire model}
 \usage{
 create_forest(axis_size, tree_density)
 }
 \arguments{
-\item{axis_size}{Axis size of the forest.}
+\item{axis_size}{Axis size of the forest. In the \code{gridabm} library, all
+automata run on square grids, so both dimensions are the same.}
 
-\item{tree_density}{How many trees to put on the board relatively.}
+\item{tree_density}{The density of the forest given as a probability for the
+R base \code{sample} function.}
 }
 \value{
-A matrix that represents a forest.
+A matrix that represents a forest on fire.
 }
 \description{
-Create a forest to burn
+The forest fire model is often initialized as a square grid where the left
+most column is "on fire".
+This function returns an initial state of this kind.
+The forest size and the tree density can be provided as well.
+}
+\examples{
+forest <- create_forest(20, 0.6)
+plot_state(forest, 5, theme_forest_fire())
 }
