@@ -5,7 +5,7 @@
 #'
 #' @examples
 theme_forest_fire <- function() {
-  return(c("white", "green", "orange", "firebrick"))
+  return(c("transparent", "green", "orange", "firebrick"))
 }
 
 
@@ -16,7 +16,7 @@ theme_forest_fire <- function() {
 #'
 #' @examples
 theme_schelling <- function() {
-  return(c("white", "orange", "darkblue"))
+  return(c("transparent", "orange", "darkblue"))
 }
 
 #' Theme for the Life automaton
@@ -26,7 +26,7 @@ theme_schelling <- function() {
 #'
 #' @examples
 theme_life <- function() {
-  return(c("white", "black"))
+  return(c("transparent", "black"))
 }
 
 #' Dark theme for the Brian's Brain automaton
@@ -36,7 +36,7 @@ theme_life <- function() {
 #'
 #' @examples
 theme_brians_brain_dark <- function() {
-  return(c("black", "white", "blue"))
+  return(c("transparent", "white", "blue"))
 }
 
 #' Light theme for the Brian's Brain automaton
@@ -46,5 +46,5 @@ theme_brians_brain_dark <- function() {
 #'
 #' @examples
 theme_brians_brain_light <- function() {
-  return(c("white", "black", "blue"))
+  return(c("transparent", "black", "blue"))
 }
