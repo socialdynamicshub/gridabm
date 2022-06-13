@@ -300,7 +300,7 @@ create_forest(axis_size = 20, tree_density = 0.9) %>%
 The stepping function for the forest fire is called `forest_fire_step`.
 The rule can be summarized s follows:
 
-> Each tree that is on fire sets all its neighboring trees (Moore neighborhood) on fire. Each tree on fire transitions into the state "burnt".
+> Each tree that is on fire sets all its neighboring trees ([Von Neumann neighborhood](https://en.wikipedia.org/wiki/Von_Neumann_neighborhood)) on fire. Each tree on fire transitions into the state "burnt".
 
 Note that this is a simplified version of the model described by in @drossel1992selforganized.
 
