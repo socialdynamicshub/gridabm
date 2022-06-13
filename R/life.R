@@ -34,19 +34,3 @@ life_step <- function(m) {
 
   return(m_upd)
 }
-
-# life_game <- function(initial_state, steps) {
-#
-#   m <- initial_state
-#   d <- board_to_df(m)
-#   d$step <- 0
-#   for (i in 1:steps) {
-#     m <- life_step(m)
-#     d_step <- board_to_df(m)
-#     d_step$step <- i
-#     d <- dplyr::bind_rows(d, d_step)
-#   }
-#   d <- dplyr::select(d, step, cell_id, row, col, state)
-#
-#   return(d)
-# }

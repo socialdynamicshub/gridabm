@@ -80,18 +80,3 @@ schelling_step <- function(board, tolerance) {
 
   return(board_upd)
 }
-
-# schelling_game <- function(initial_state, tolerance, steps) {
-#   board <- initial_state
-#   d <- board_to_df(board)
-#   d$step <- 0
-#   for (i in 1:steps) {
-#     board <- schelling_step(board, tolerance)
-#     d_step <- board_to_df(board)
-#     d_step$step <- i
-#     d <- dplyr::bind_rows(d, d_step)
-#   }
-#   d <- dplyr::select(d, step, cell_id, row, col, state)
-#
-#   return(d)
-# }
