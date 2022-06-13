@@ -36,7 +36,7 @@ animate_model_run(
 )
 ```
 
-![example automaton](media/schelling-example.gif)
+![example automaton](media/example-output.gif)
 
 
 ## How to Contribute
