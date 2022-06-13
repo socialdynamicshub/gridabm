@@ -553,11 +553,11 @@ life_board <- matrix(
   nrow = 25, ncol = 25
 )
 life_results <- run_automaton(life_board, 100, life_step)
-animate_model_run(life_results, 4, theme_life())
+animate_model_run(life_results, 3, theme_life())
 ```
 
 ```{r animate-life, echo=FALSE}
-animate_model_run(life_results, 5, theme_life())
+animate_model_run(life_results, 3, theme_life())
 ```
 
 
