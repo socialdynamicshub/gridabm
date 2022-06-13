@@ -17,5 +17,6 @@ Imports:
     gganimate,
     ggplot2,
     gifski,
+    RColorBrewer,
     magrittr,
     tidyr

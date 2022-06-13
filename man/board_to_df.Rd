@@ -2,16 +2,24 @@
 % Please edit documentation in R/board_to_df.R
 \name{board_to_df}
 \alias{board_to_df}
-\title{Turn a board matrix into a dataframe}
+\title{Turn an automaton state matrix into a \code{data.frame}}
 \usage{
 board_to_df(m)
 }
 \arguments{
-\item{m}{A matrix}
+\item{m}{A matrix representing an automaton state.}
 }
 \value{
-A dataframe
+The \code{data.frame} representation of the automaton state.
 }
 \description{
-Turn a board matrix into a dataframe
+Turn an automaton state matrix into a \code{data.frame}
+}
+\examples{
+automaton_state <- matrix(
+  sample(c(0, 1), replace = TRUE, prob = c(0.5, 0.5), 100),
+  nrow = 10, ncol = 10
+)
+
+board_to_df(automaton_state)
 }

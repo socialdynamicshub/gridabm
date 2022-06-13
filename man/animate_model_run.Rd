@@ -7,15 +7,40 @@
 animate_model_run(df, marker_size, color_scheme)
 }
 \arguments{
-\item{df}{The simulation data.}
+\item{df}{The simulation data as returned by the \code{run_automaton} function.}
 
-\item{marker_size}{Size of the markers.}
+\item{marker_size}{Size of the cells on the grid
+(needs adjustment depending on grid size).}
 
-\item{color_scheme}{Which colors to use for which cell state.}
+\item{color_scheme}{Which colors to use for which cell state. As the cell
+states are defined by a sequence of integers starting at 0, you can simply
+specify the colors by providing a vector with each entry \code{i} representing
+the color for state \code{i}.}
 }
 \value{
-A gganimate animation
+A gganimate animation.
 }
 \description{
-Animate a model run
+\code{animate_model_run} takes the results of an automaton run and animates it
+leveraging the \code{gganimate} library.
+You can specify the marker size on the grid and customize the color scheme.
+}
+\examples{
+initial_state <- matrix(
+  sample(
+    c(0, 1, 2, 3),
+    replace = TRUE,
+    prob = c(0.25, 0.25, 0.25, 0.25),
+    400
+  ),
+  nrow = 20, ncol = 20
+)
+
+results <- run_automaton(initial_state, 100, schelling_step, tolerance = 3)
+
+animate_model_run(
+  results,
+  5,
+  c("transparent", "gold2", "royalblue", "coral")
+)
 }

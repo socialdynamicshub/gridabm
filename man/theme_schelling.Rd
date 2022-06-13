@@ -7,7 +7,7 @@
 theme_schelling()
 }
 \value{
-A vector containing the color scheme
+A vector containing the color scheme.
 }
 \description{
 Theme for the Schelling automaton

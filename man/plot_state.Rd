@@ -4,17 +4,17 @@
 \alias{plot_state}
 \title{Plot a grid ABM state}
 \usage{
-plot_state(state, marker_size, color_scheme)
+plot_state(state, marker_size = 5, color_scheme = theme_default())
 }
 \arguments{
-\item{state}{A dataframe or a matrix representing the current state.}
+\item{state}{A \code{data.frame} or a matrix representing the current state.}
 
 \item{marker_size}{How big the markers on the plot should be.}
 
 \item{color_scheme}{What colors to use for each cell state.}
 }
 \value{
-A ggplot2 object of the current state.
+A \code{ggplot2} object of the current state.
 }
 \description{
 Plot a grid ABM state
