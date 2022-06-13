@@ -1,7 +1,7 @@
 ---
-title: "Grid Agent-Based Models"
+title: "`gridabm`: A Tool for 2D Cellular Automata and Agent-Based Models"
 description: |
-  This article runs you through using the `gridabm` library to play around with 2D cellular automata or grid ABMs.
+  The `gridabm` library provides tools for building, visualizing, and analyzing cellular automata and agent-based models that run on a 2D grid. This article describes the general workflow of the package and shows you how to build your own automata or analyze the ones implemented in this package.
 author:
   - name: Johannes Nakayama 
     url: https://github.com/JohannesNakayama
@@ -21,10 +21,16 @@ set.seed(420)
 
 ## Installation
 
-You will need the `remotes` library to install `gridabm` from Github.
+To install the `gridabm` library, you need the `remotes` package to install it from Github.
+If you haven't installed `remotes` yet, you can get it from CRAN:
+
+```{r}
+install.packages("remotes")
+```
+
+Then, install `gridabm` from Github:
 
 ```{r, echo=TRUE, eval=FALSE}
-# install.packages("remotes")
 remotes::install_github("socialdynamicshub/gridabm")
 ```
 
@@ -40,7 +46,7 @@ matrix(rep(0, 400), nrow = 20) %>%
   labs(title = "A 20x20 grid")
 ```
 
-In this library, the grid plotted above corresponds to a matrix with distinct numeric states.
+In the `gridabm` library, the grid is represented by a *matrix* whose entries only take on values from a set of distinct numeric states.
 Let's for example create a matrix with the distinct states $0$ and $1$.
 Let's say state $0$ means that the cell is empty, so we assign it the color white.
 State $1$ represents "something" on the board, we'll assign it the color black.
@@ -80,10 +86,51 @@ plot_state(mat, marker_size = 18, color_scheme = c("white", "black")) +
 
 You can construct boards with more distinct states in the same way.
 
-Apart from a grid, a set of distinct states, and an initial state, in a cellular automaton, we need a so-called update rule.
-In **Agent-Based Modeling**, this is sometimes referred to as a *stepping function*.
 
-In the `gridabm` library, a stepping function is simply a function that takes a matrix with numeric states, performs the update rule, and returns the updated matrix.
+
+### Update Rules
+
+Apart from a grid, a set of distinct states, and an initial state, we need a so-called **update rule**.
+In *agent-based modeling*, this is sometimes referred to as a **stepping function**.
+Usually, the update rules are defined at the cell/agent level, meaning that the state of an agent in the next iteration of the automaton is contingent on the states of its neighbors (or a subset of them).
+
+What constitutes the neighborhood of an agent can be defined in different ways, but common neighborhoods are implemented in the package.
+For instance, the Moore neighborhood is simply the set of all adjacent cells, including diagonally adjacent ones.
+
+```{r}
+mat <- t(
+  matrix(
+    c(
+      c(0, 0, 0, 0, 0, 0, 0),
+      c(0, 0, 0, 0, 0, 0, 0),
+      c(0, 0, 2, 2, 2, 0, 0),
+      c(0, 0, 2, 1, 2, 0, 0),
+      c(0, 0, 2, 2, 2, 0, 0),
+      c(0, 0, 0, 0, 0, 0, 0),
+      c(0, 0, 0, 0, 0, 0, 0)
+    ),
+    nrow = 7
+  )
+)
+plot_state(mat, marker_size = 18, color_scheme = c("white", "grey20", "grey80"))
+```
+
+In this example, the Moore neighborhood of the darker cell is given by the lighter cells.
+To get the coordinates of a cell's Moore neighborhood in the `gridabm` package, use the `get_moore_neighborhood` function.
+
+```{r, echo=TRUE, eval=FALSE}
+get_moore_neighborhood(i = 4, j = 5, axis_size = 20, periodic = TRUE)
+```
+
+`i` and `j` are the coordinates in the matrix, `axis_size` refers to the dimension of the matrix in either direction^[currently, only square grids are possible], and the `periodic` parameter indicates whether the grid wraps around (i.e., more precisely, we're dealing with a torus).
+
+In the `gridabm` library, update rules are simply functions that
+
+* take a matrix with numeric states,
+* perform the update rule for each cell,
+* and return the updated matrix.
+
+The updated matrix should only contain values in the set of distinct states that we defined in the beginning.
 
 Let's examine this with a very simple example.
 We use a matrix with distinct states $0$ and $1$.
@@ -160,9 +207,11 @@ animate_model_run(
 
 
 
+
+
 ## Simulating a Forest Fire
 
-Several well-known cellular automata (or agent-based model, depending on how you view it) are implemented in this package.
+Several well-known cellular automata (or agent-based models, depending on how you view it) are implemented in this package.
 One of them is the so-called forest fire simulation [@drossel1992selforganized].
 
 Let's first create a board.
@@ -181,11 +230,11 @@ The color coding is intended to mimic an actual forest fire:
 Green cells are trees, orange cells are trees on fire, dark red (`firebrick`) cells are burnt trees, and white cells are empty.
 You can see in the plot that the trees on the left of the board are all on fire and the rest of the trees are scattered across the board.
 
-In the `create_forest` convenience function, we set up a parameter `tree_density`.
+In the `create_forest` convenience function, we set a parameter `tree_density`.
 This is just the probability with which a tree is put on each cell.
 An example of a sparser forest would look like this:
 
-```{r}
+```{r, echo=TRUE}
 create_forest(axis_size = 20, tree_density = 0.3) %>% 
   plot_state(
     marker_size = 5, color_scheme = c("white", "green", "orange", "firebrick")
@@ -194,7 +243,7 @@ create_forest(axis_size = 20, tree_density = 0.3) %>%
 
 ... and a more dense one would look like this:
 
-```{r}
+```{r, echo=TRUE}
 create_forest(axis_size = 20, tree_density = 0.9) %>% 
   plot_state(
     marker_size = 5, color_scheme = c("white", "green", "orange", "firebrick")
@@ -250,7 +299,31 @@ animate_model_run(forest_results, 5, c("white", "green", "orange", "firebrick"))
 
 The fire doesn't run through the entire forest, but stops almost immediately.
 
-Let's look how tree density is related to the percentage of the forest burnt after the fire has run its course.
+Now these animations are nice, but we can go beyond merely looking at the model and analyze the effects of different parameters in-depth.
+The `run_automaton` function returns a `data.frame` that contains the results of the model run.
+
+```{r, echo=FALSE}
+if (!file.exists("forest_3_results.RDS")) {
+  forest <- create_forest(20, 0.7)
+  forest_results <- run_automaton(forest, 100, forest_fire_step)
+  readr::write_rds(forest_results, "forest_3_results.RDS")  
+} else {
+  forest_results <- readr::read_rds("forest_3_results.RDS")
+}
+```
+
+```{r, echo=TRUE, eval=FALSE}
+forest <- create_forest(20, 0.7)
+forest_results <- run_automaton(forest, 100, forest_fire_step)
+head(forest_results, 20)
+```
+
+```{r, echo=FALSE}
+head(forest_results, 20) %>% knitr::kable()
+```
+
+
+Let's look how tree density is related to how quickly the fire runs through the forest and how much of the forest is burnt.
 
 ```{r, fig.width=8, fig.height=12}
 d <- data.frame()
@@ -300,7 +373,7 @@ d %>%
 [Descriptions coming soon]
 
 
-```{r, echo=TRUE}
+```{r, echo=TRUE, eval=FALSE}
 forest <- matrix(
   sample(c(0, 1, 2), prob = c(0.3, 0.68, 0.02), replace = TRUE, size = 10000),
   nrow = 100, ncol = 100
@@ -315,7 +388,7 @@ animate_model_run(forest_results, 1, c("white", "green", "orange", "firebrick"))
 
 
 
-```{r, echo=TRUE}
+```{r, echo=TRUE, eval=FALSE}
 life_board <- matrix(
   sample(c(0, 1), prob = c(0.8, 0.2), replace = TRUE, size = 625),
   nrow = 25, ncol = 25
@@ -326,7 +399,7 @@ animate_model_run(life_results, 4, c("white", "black"))
 
 
 
-```{r, echo=TRUE}
+```{r, echo=TRUE, eval=FALSE}
 schelling_board <- matrix(
   sample(c(0, 1, 2), prob = c(0.1, 0.45, 0.45), replace = TRUE, size = 400),
   nrow = 20, ncol = 20
@@ -337,7 +410,7 @@ animate_model_run(schelling_results, 5, c("white", "orange", "blue"))
 
 
 
-```{r, echo=TRUE}
+```{r, echo=TRUE, eval=FALSE}
 brians_brain_board <- matrix(
   sample(c(0, 1, 2), prob = c(0.5, 0.25, 0.25), replace = TRUE, size = 2500),
   nrow = 50, ncol = 50
