@@ -272,7 +272,7 @@ One of them is the so-called forest fire simulation [@drossel1992selforganized].
 
 Let's first create a board.
 The color coding is intended to mimic an actual forest fire:
-Green cells are trees, orange cells are trees on fire, dark red (`firebrick`) cells are burnt trees, and white cells are empty.
+Green cells are trees, orange cells are trees on fire, dark red cells are burnt trees, and white cells are empty.
 For the forest fire, there is a convenience function `create_forest` because there is a specific way this model is usually setup.
 You can see in the plot that the trees on the left of the board are all on fire and the rest of the trees are scattered across the board.
 
@@ -298,6 +298,12 @@ create_forest(axis_size = 20, tree_density = 0.9) %>%
 ```
 
 The stepping function for the forest fire is called `forest_fire_step`.
+The rule can be summarized s follows:
+
+> Each tree that is on fire sets all its neighboring trees (Moore neighborhood) on fire. Each tree on fire transitions into the state "burnt".
+
+Note that this is a simplified version of the model described by in @drossel1992selforganized.
+
 You can run and animate the automaton like this:
 
 ```{r run-forest-1, echo=FALSE}
@@ -344,7 +350,7 @@ animate_model_run(forest_results, 5, theme_forest_fire())
 animate_model_run(forest_results, 5, theme_forest_fire())
 ```
 
-The fire doesn't run through the entire forest, but stops almost immediately.
+The fire doesn't run through the entire forest, but stops soon after starting, leaving a significant portion of the forest unburnt.
 
 Now these animations are nice, but we can go beyond merely looking at the model and analyze the effects of different parameters in-depth.
 The `run_automaton` function returns a `data.frame` that contains the results of the model run.
