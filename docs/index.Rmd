@@ -277,8 +277,8 @@ For the forest fire, there is a convenience function `create_forest` because the
 You can see in the plot that the trees on the left of the board are all on fire and the rest of the trees are scattered across the board.
 
 ```{r create-forest-demo, echo=TRUE}
-forest <- create_forest(axis_size = 20, tree_density = 0.7)
-plot_state(forest, marker_size = 5, color_scheme = theme_forest_fire())
+create_forest(axis_size = 20, tree_density = 0.7) %>% 
+  plot_state(marker_size = 5, color_scheme = theme_forest_fire())
 ```
 
 In the `create_forest` function, we set a parameter `tree_density`.
@@ -464,7 +464,7 @@ Schelling demonstrated that even with seemingly high "tolerance" levels in urban
 
 We set up the model with agents of two kinds, let's call them "orange" and "blue" agents.
 
-```{r schelling-board-demo}
+```{r schelling-board-demo, echo=TRUE}
 schelling_board <- matrix(
   sample(c(0, 1, 2), prob = c(0.1, 0.45, 0.45), replace = TRUE, size = 400),
   nrow = 20, ncol = 20
@@ -485,7 +485,7 @@ schelling_board %>%
   animate_model_run(marker_size = 5, color_scheme = theme_schelling())
 ```
 
-As you can see, the agents segregate into larger homogenous areas.
+As you can see, the agents segregate into larger homogeneous areas.
 
 ```{r schelling-animation-2, echo=TRUE}
 schelling_board %>% 
@@ -497,6 +497,7 @@ If you look at a model run with a tolerance level $t = 5$, we can still observe 
 
 There are many things that can be analyzed in this model, but I'll leave this to you.
 Here are some primers though.
+
 
 #### Manipulate the Distribution of Agents
 
