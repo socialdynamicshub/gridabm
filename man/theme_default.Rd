@@ -12,3 +12,6 @@ A vector containing the color scheme.
 \description{
 Default theme if no other theme was supplied
 }
+\examples{
+theme_default()
+}

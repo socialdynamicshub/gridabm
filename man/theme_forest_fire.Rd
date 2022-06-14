@@ -12,3 +12,6 @@ A vector containing the color scheme.
 \description{
 Theme for the Forest Fire automaton
 }
+\examples{
+theme_forest_fire()
+}
