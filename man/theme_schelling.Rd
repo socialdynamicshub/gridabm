@@ -12,3 +12,6 @@ A vector containing the color scheme.
 \description{
 Theme for the Schelling automaton
 }
+\examples{
+theme_schelling()
+}

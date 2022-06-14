@@ -12,3 +12,6 @@ A vector containing the color scheme.
 \description{
 Dark theme for the Brian's Brain automaton
 }
+\examples{
+theme_brians_brain_dark()
+}
