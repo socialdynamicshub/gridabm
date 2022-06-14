@@ -1,14 +1,15 @@
 #' Get the Moore neighborhood of a specified cell
 #'
-#' @param i Row index
-#' @param j Column index
-#' @param axis_size Where the board wraps.
+#' @param i Row index.
+#' @param j Column index.
+#' @param axis_size Grid dimension in each direction.
 #' @param periodic Whether to employ periodic boundary conditions or not.
 #'
 #' @return A list of coordinates of Moore neighborhood cells.
 #' @export
 #'
 #' @examples
+#' get_moore_neighborhood(5, 5, 20)
 get_moore_neighborhood <- function(i, j, axis_size, periodic = TRUE) {
 
   if (periodic) {

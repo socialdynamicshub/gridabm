@@ -1,6 +1,14 @@
 #' Plot a grid ABM state
 #'
-#' @param state A `data.frame` or a matrix representing the current state.
+#' All visualizations in the `gridabm` library are `ggplot2` objects and can be
+#' customized accordingly.
+#' This function either takes a state `matrix` or a `data.frame` as returned by
+#' `board_to_df` and returns a visualization of the state as a `ggplot2` object.
+#' Marker size and color scheme can be customized as well.
+#' The default color palette used is based on the `Dark2` palette from
+#' `RColorBrewer`.
+#'
+#' @param state A `data.frame` or a `matrix` representing the current state.
 #' @param marker_size How big the markers on the plot should be.
 #' @param color_scheme What colors to use for each cell state.
 #'
@@ -8,6 +16,11 @@
 #' @export
 #'
 #' @examples
+#' state <- matrix(
+#'   sample(c(0, 1, 2, 3), replace = TRUE, prob = c(0.1, 0.3, 0.3, 0.3), 400),
+#'   nrow = 20, ncol = 20
+#' )
+#' plot_state(state)
 plot_state <- function(state, marker_size = 5, color_scheme = theme_default()) {
 
   if (is.matrix(state)) {
