@@ -7,7 +7,7 @@
 plot_state(state, marker_size = 5, color_scheme = theme_default())
 }
 \arguments{
-\item{state}{A \code{data.frame} or a matrix representing the current state.}
+\item{state}{A \code{data.frame} or a \code{matrix} representing the current state.}
 
 \item{marker_size}{How big the markers on the plot should be.}
 
@@ -17,5 +17,18 @@ plot_state(state, marker_size = 5, color_scheme = theme_default())
 A \code{ggplot2} object of the current state.
 }
 \description{
-Plot a grid ABM state
+All visualizations in the \code{gridabm} library are \code{ggplot2} objects and can be
+customized accordingly.
+This function either takes a state \code{matrix} or a \code{data.frame} as returned by
+\code{board_to_df} and returns a visualization of the state as a \code{ggplot2} object.
+Marker size and color scheme can be customized as well.
+The default color palette used is based on the \code{Dark2} palette from
+\code{RColorBrewer}.
+}
+\examples{
+state <- matrix(
+  sample(c(0, 1, 2, 3), replace = TRUE, prob = c(0.1, 0.3, 0.3, 0.3), 400),
+  nrow = 20, ncol = 20
+)
+plot_state(state)
 }

@@ -7,11 +7,11 @@
 get_moore_neighborhood(i, j, axis_size, periodic = TRUE)
 }
 \arguments{
-\item{i}{Row index}
+\item{i}{Row index.}
 
-\item{j}{Column index}
+\item{j}{Column index.}
 
-\item{axis_size}{Where the board wraps.}
+\item{axis_size}{Grid dimension in each direction.}
 
 \item{periodic}{Whether to employ periodic boundary conditions or not.}
 }
@@ -20,4 +20,7 @@ A list of coordinates of Moore neighborhood cells.
 }
 \description{
 Get the Moore neighborhood of a specified cell
+}
+\examples{
+get_moore_neighborhood(5, 5, 20)
 }

@@ -7,11 +7,11 @@
 get_von_neumann_neighborhood(i, j, axis_size, periodic = TRUE)
 }
 \arguments{
-\item{i}{Row index}
+\item{i}{Row index.}
 
-\item{j}{Column index}
+\item{j}{Column index.}
 
-\item{axis_size}{Where the board wraps.}
+\item{axis_size}{Grid dimension in each direction.}
 
 \item{periodic}{Whether to employ periodic boundary conditions or not.}
 }
@@ -20,4 +20,7 @@ A list of coordinates of Von Neumann neighborhood cells.
 }
 \description{
 Get Von Neumann neighborhood of a specified cell
+}
+\examples{
+get_von_neumann_neighborhood(5, 5, 20)
 }
