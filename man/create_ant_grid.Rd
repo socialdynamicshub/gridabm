@@ -4,7 +4,7 @@
 \alias{create_ant_grid}
 \title{Create a grid for Langton's Ant}
 \usage{
-create_ant_grid(antpos, antorient, axis_size, state_dist = c(1, 0))
+create_ant_grid(antpos, antorient = "north", axis_size, state_dist = c(1, 0))
 }
 \arguments{
 \item{antpos}{A vector giving the coordinates of the ant on the grid (row,

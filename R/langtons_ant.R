@@ -13,7 +13,11 @@
 #' @examples
 #' initial_state <- create_ant_grid(c(15, 15), "north", 30)
 #' plot_state(initial_state, 3, theme_langtons_ant())
-create_ant_grid <- function(antpos, antorient, axis_size, state_dist = c(1, 0)) {
+create_ant_grid <- function(
+    antpos, axis_size,
+    antorient = "north",
+    state_dist = c(1, 0)
+) {
   m <- create_grid(2, state_dist, axis_size)
   if (antorient == "north") {
     m[antpos[1], antpos[2]] <- 2
@@ -24,7 +28,7 @@ create_ant_grid <- function(antpos, antorient, axis_size, state_dist = c(1, 0)) 
   } else if (antorient == "west") {
     m[antpos[1], antpos[2]] <- 5
   } else {
-    warning("Invalid orientation. Defaulting to \"north\"")
+    warning("Invalid ant orientation. Defaulting to \"north\"")
     m[antpos[1], antpos[2]] <- 2
   }
   return(m)
@@ -37,7 +41,6 @@ create_ant_grid <- function(antpos, antorient, axis_size, state_dist = c(1, 0)) 
 #' leaving behind black or white cells according to a specific rule.
 #' For more information, check out
 #' <https://en.wikipedia.org/wiki/Langton%27s_ant>.
-#'
 #'
 #' @param m A `matrix` representing the current state.
 #'
