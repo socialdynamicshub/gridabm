@@ -4,16 +4,16 @@
 \alias{create_ant_grid}
 \title{Create a grid for Langton's Ant}
 \usage{
-create_ant_grid(antpos, antorient = "north", axis_size, state_dist = c(1, 0))
+create_ant_grid(antpos, axis_size, antorient = "north", state_dist = c(1, 0))
 }
 \arguments{
 \item{antpos}{A vector giving the coordinates of the ant on the grid (row,
 column).}
 
+\item{axis_size}{The size of the grid dimensions.}
+
 \item{antorient}{One of "north", "east", "south", and "west". Defaults to
 "north" if orientation is invalid.}
-
-\item{axis_size}{The size of the grid dimensions.}
 
 \item{state_dist}{Distribution of states as given to \code{create_grid}.}
 }
