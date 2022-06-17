@@ -27,7 +27,7 @@ create_forest <- function(axis_size, tree_density) {
     ncol = axis_size,
     nrow = axis_size
   )
-  forest[, 1] <- 2  # set forest on fire!
+  forest[, 1] <- forest[, 1] * 2  # set forest on fire!
   return(forest)
 }
 

@@ -37,12 +37,11 @@ plot_state <- function(state, marker_size = 5, color_scheme = theme_default()) {
     ggplot2::scale_fill_manual(values = color_scheme) +
     ggplot2::scale_x_continuous(
       minor_breaks = seq(0.5, axis_size + 0.5, 1),
-      breaks = seq(0, axis_size)
+      breaks = seq(-1, axis_size + 1)
     ) +
     ggplot2::scale_y_continuous(
-      # trans = "reverse",
       minor_breaks = seq(0.5, axis_size + 0.5, 1),
-      breaks = seq(0, axis_size)
+      breaks = seq(-1, axis_size + 1)
     ) +
     ggplot2::coord_fixed() +
     ggplot2::theme(
