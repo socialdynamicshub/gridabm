@@ -11,7 +11,7 @@ output: distill::distill_article
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE, fig.align = 'center')
+knitr::opts_chunk$set(echo = FALSE, fig.align = 'center', cache = TRUE)
 library(gridabm)
 library(ggplot2)
 library(dplyr)
@@ -42,7 +42,7 @@ The `gridabm` library lets you play around with [cellular automata](https://en.w
 You can think of a grid just as a board of cells.
 
 ```{r empty-grid, echo=FALSE}
-matrix(rep(0, 400), nrow = 20) %>% 
+create_board(1, c(1), c(20, 20)) %>% 
   plot_state(5, c("white")) +
   labs(title = "A 20x20 grid")
 ```
@@ -79,10 +79,7 @@ mat <- t(
     nrow = 5
   )
 )
-plot_state(mat, marker_size = 18, color_scheme = c("white", "black")) +
-  scale_x_continuous(limits = c(0.5, 5.5)) +
-  scale_y_continuous(limits = c(0.5, 5.5)) +
-  NULL
+plot_state(mat, marker_size = 18, color_scheme = c(`0` = "transparent", `1` = "black"))
 ```
 
 You can construct boards with more distinct states in the same way.
@@ -113,14 +110,14 @@ mat <- t(
     nrow = 7
   )
 )
-plot_state(mat, marker_size = 18, color_scheme = c("white", "grey20", "grey80"))
+plot_state(mat, marker_size = 18, color_scheme = c(`0` = "white", `1` = "grey20", `2` = "grey80"))
 ```
 
 The Moore neighborhood of the darker cell is given by the lighter cells.
 To get the coordinates of a cell's Moore neighborhood in the `gridabm` package, use the `get_moore_neighborhood` function.
 
 ```{r demo-moore-neighborhood-function, echo=TRUE, eval=FALSE}
-get_moore_neighborhood(i = 4, j = 5, axis_size = 20, periodic = TRUE)
+get_moore_neighborhood(i = 4, j = 5, dims = c(20, 15), periodic = TRUE)
 ```
 
 `i` and `j` are the coordinates in the matrix, `axis_size` refers to the dimension of the matrix in either direction^[Currently, only square grids are possible, so the two dimensions of the grid are identical], and the `periodic` parameter indicates whether the grid wraps around (i.e., more precisely, we're dealing with a [torus](https://en.wikipedia.org/wiki/Torus)).
@@ -143,12 +140,11 @@ We could implement this rule like this:
 
 ```{r left-shift-rule, echo=TRUE}
 left_shift_rule <- function(m) {
-  axis_size <- dim(m)[1]
   m_upd <- m
   
-  for (i in 1:axis_size) {
-    for (j in 1:axis_size) {
-      if (j < axis_size) {
+  for (i in 1:dim(m)[1]) {
+    for (j in 1:dim(m)[2]) {
+      if (j < dim(m)[2]) {
         new_j <- j + 1
       } else {
         new_j <- 1
@@ -165,10 +161,7 @@ Now, let's create an initial state, run the simulation, and animate it.
 To change things up, let's assign the color white to state $0$ and blue to state $1$
 
 ```{r left-shift-rule-procedure, echo=TRUE}
-left_shift_board <- matrix(
-  sample(c(0, 1), prob = c(0.7, 0.3), replace = TRUE, size = 400),
-  nrow = 20, ncol = 20
-)
+left_shift_board <- create_board(2, c(0.7, 0.3), c(20, 20))
 left_shift_results <- run_automaton(
   left_shift_board,
   steps = 100,
@@ -177,7 +170,7 @@ left_shift_results <- run_automaton(
 animate_model_run(
   left_shift_results,
   marker_size = 5,
-  color_scheme = c("white", "blue")
+  color_scheme = c(`0` = "white", `1` = "blue")
 )
 ```
 
@@ -193,11 +186,24 @@ left_shift_board <- matrix(
 )
 ```
 
+You can also create boards more conveniently with the `create_board` function.
+The following code is equivalent to the one above.
+
+```{r}
+left_shift_board <- create_board(
+  n_states = 2,
+  state_dist = c(0.7, 0.3),
+  dims = c(20, 20)
+)
+```
+
 Then, you run the automaton with the stepping function (`stepfunc`) that you defined before.
 
 ```{r run-automaton-demo, echo=TRUE, eval=FALSE}
 left_shift_results <- run_automaton(
-  left_shift_board, steps = 100, stepfunc = left_shift_rule
+  left_shift_board,
+  steps = 100,
+  stepfunc = left_shift_rule
 )
 ```
 
@@ -205,7 +211,9 @@ The results can be animated with the function `animate_model_run`.
 
 ```{r animation-demo, echo=TRUE, eval=FALSE}
 animate_model_run(
-  left_shift_results, marker_size = 5, color_scheme = c("white", "blue")
+  left_shift_results,
+  marker_size = 5,
+  color_scheme = c(`0` = "white", `1` = "blue")
 )
 ```
 
@@ -217,10 +225,7 @@ For the update rules implemented in the `gridabm` library, some predefined color
 For instance, the Schelling model [@schelling1971dynamic] comes with a commonly used theme of "orange" and "blue" agents.
 
 ```{r lib-theme-demo, echo=TRUE}
-schelling_board <- matrix(
-  sample(c(0, 1, 2), prob = c(0.1, 0.45, 0.45), replace = TRUE, size = 400),
-  nrow = 20, ncol = 20
-)
+schelling_board <- create_board(3, c(0.1, 0.45, 0.45), c(20, 20))
 plot_state(schelling_board, marker_size = 5, color_scheme = theme_schelling())
 ```
 
@@ -232,7 +237,7 @@ For instance, we could change the colors of the board above like this:
 plot_state(
   schelling_board,
   marker_size = 5,
-  color_scheme = c("transparent", "gold2", "royalblue")
+  color_scheme = c(`0` = "transparent", `1` = "gold2", `2` = "royalblue")
 )
 ```
 
@@ -243,9 +248,9 @@ For instance, if you would like to plot this board with a dark theme, you can do
 plot_state(
   schelling_board,
   marker_size = 5,
-  color_scheme = c("transparent", "gold2", "royalblue")
+  color_scheme = c(`0` = "transparent", `1` = "gold2", `2` = "royalblue")
 ) +
-  theme(panel.background = element_rect(fill = "black"))
+  theme(panel.background = element_rect(fill = "grey10"))
 ```
 
 The same is true for the outputs of `animate_model_run`.
@@ -256,9 +261,9 @@ schelling_board %>%
   run_automaton(steps = 100, stepfunc = schelling_step, tolerance = 3) %>% 
   animate_model_run(
     marker_size = 5,
-    color_scheme = c("transparent", "gold2", "royalblue")
+    color_scheme = c(`0` = "transparent", `1` = "gold2", `2` = "royalblue")
   ) +
-    theme(panel.background = element_rect(fill = "black"))
+    theme(panel.background = element_rect(fill = "grey10"))
 ```
 
 
@@ -277,7 +282,7 @@ For the forest fire, there is a convenience function `create_forest` because the
 You can see in the plot that the trees on the left of the board are all on fire and the rest of the trees are scattered across the board.
 
 ```{r create-forest-demo, echo=TRUE}
-create_forest(axis_size = 20, tree_density = 0.7) %>% 
+create_forest(dims = c(20, 20), tree_density = 0.7) %>% 
   plot_state(marker_size = 5, color_scheme = theme_forest_fire())
 ```
 
@@ -286,14 +291,14 @@ This is just the probability with which a tree is put on each cell.
 An example of a sparser forest would look like this:
 
 ```{r sparse-forest, echo=TRUE}
-create_forest(axis_size = 20, tree_density = 0.3) %>% 
+create_forest(dims = c(20, 20), tree_density = 0.3) %>% 
   plot_state(marker_size = 5, color_scheme = theme_forest_fire())
 ```
 
 ... and a more dense one would look like this:
 
 ```{r dense-forest, echo=TRUE}
-create_forest(axis_size = 20, tree_density = 0.9) %>% 
+create_forest(dims = c(20, 20), tree_density = 0.9) %>% 
   plot_state(marker_size = 5, color_scheme = theme_forest_fire())
 ```
 
@@ -304,25 +309,15 @@ The rule can be summarized s follows:
 
 Note that this is a simplified version of the model described by in @drossel1992selforganized.
 
+
+[-------> CONTINUE REFACTORING HERE]
+
+
 You can run and animate the automaton like this:
 
-```{r run-forest-1, echo=FALSE}
-if (!file.exists("forest_1_results.RDS")) {
-  forest <- create_forest(20, 0.7)
-  forest_results <- run_automaton(forest, 100, forest_fire_step)
-  readr::write_rds(forest_results, "forest_1_results.RDS")  
-} else {
-  forest_results <- readr::read_rds("forest_1_results.RDS")
-}
-```
-
-```{r forest-1-demo, echo=TRUE, eval=FALSE}
-forest <- create_forest(20, 0.7)
+```{r forest-1-demo, echo=TRUE}
+forest <- create_forest(c(20, 20), 0.7)
 forest_results <- run_automaton(forest, 100, forest_fire_step)
-animate_model_run(forest_results, 5, theme_forest_fire())
-```
-
-```{r animate-forest-1, echo=FALSE}
 animate_model_run(forest_results, 5, theme_forest_fire())
 ```
 
@@ -330,23 +325,9 @@ As you can see, a wall of fire runs through the forest pretty quickly.
 
 Let's see, how this looks like in a less dense forest.
 
-```{r run-forest-2, echo=FALSE}
-if (!file.exists("forest_2_results.RDS")) {
-  forest <- create_forest(20, 0.5)
-  forest_results <- run_automaton(forest, 100, forest_fire_step)
-  readr::write_rds(forest_results, "forest_2_results.RDS")  
-} else {
-  forest_results <- readr::read_rds("forest_2_results.RDS")
-}
-```
-
-```{r forest-2-demo, echo=TRUE, eval=FALSE}
-forest <- create_forest(20, 0.5)
+```{r forest-2-demo, echo=TRUE}
+forest <- create_forest(c(20, 20), 0.5)
 forest_results <- run_automaton(forest, 100, forest_fire_step)
-animate_model_run(forest_results, 5, theme_forest_fire())
-```
-
-```{r animate-forest-2, echo=FALSE}
 animate_model_run(forest_results, 5, theme_forest_fire())
 ```
 
@@ -355,54 +336,27 @@ The fire doesn't run through the entire forest, but stops soon after starting, l
 Now these animations are nice, but we can go beyond merely looking at the model and analyze the effects of different parameters in-depth.
 The `run_automaton` function returns a `data.frame` that contains the results of the model run.
 
-```{r run-forest-3, echo=FALSE}
-if (!file.exists("forest_3_results.RDS")) {
-  forest <- create_forest(20, 0.7)
-  forest_results <- run_automaton(forest, 100, forest_fire_step)
-  readr::write_rds(forest_results, "forest_3_results.RDS")  
-} else {
-  forest_results <- readr::read_rds("forest_3_results.RDS")
-}
-```
-
 ```{r forest-3-demo, echo=TRUE, eval=FALSE}
-forest <- create_forest(20, 0.7)
+forest <- create_forest(c(20, 20), 0.7)
 forest_results <- run_automaton(forest, 100, forest_fire_step)
 head(forest_results, 20)
 ```
 
 ```{r forest-3-head, echo=FALSE}
+forest <- create_forest(c(20, 20), 0.7)
+forest_results <- run_automaton(forest, 100, forest_fire_step)
 head(forest_results, 20) %>% knitr::kable()
 ```
 
 
 Let's look how tree density is related to how quickly the fire runs through the forest and how much of the forest is burnt.
 
-```{r run-forest-multi, echo=FALSE}
-if (!file.exists("forest_fire_multi_results.RDS")) {
-  d <- data.frame()
-  for (density in seq(0.1, 0.9, 0.1)) {
-    for (replicate in seq(1, 5, 1)) {
-      forest <- create_forest(20, density)
-      forest_results <- run_automaton(forest, 100, forest_fire_step)
-      forest_results$density <- density
-      forest_results$replicate <- replicate
-      d <- dplyr::bind_rows(d, forest_results)
-    }
-  }
-  readr::write_rds(d, "forest_fire_multi_results.RDS")
-} else {
-  d <- readr::read_rds("forest_fire_multi_results.RDS")
-}
-```
-
-
 ```{r forest-multi-demo, echo=TRUE, eval=FALSE}
 # Run 5 replicates of the model
 d <- data.frame()
 for (density in seq(0.1, 0.9, 0.1)) {
   for (replicate in seq(1, 5, 1)) {
-    forest <- create_forest(20, density)
+    forest <- create_forest(c(20, 20), density)
     forest_results <- run_automaton(forest, 100, forest_fire_step)
     forest_results$density <- density
     forest_results$replicate <- replicate
@@ -465,10 +419,7 @@ Schelling demonstrated that even with seemingly high "tolerance" levels in urban
 We set up the model with agents of two kinds, let's call them "orange" and "blue" agents.
 
 ```{r schelling-board-demo, echo=TRUE}
-schelling_board <- matrix(
-  sample(c(0, 1, 2), prob = c(0.1, 0.45, 0.45), replace = TRUE, size = 400),
-  nrow = 20, ncol = 20
-)
+schelling_board <- create_board(3, c(0.1, 0.45, 0.45), c(20, 20))
 plot_state(schelling_board, marker_size = 5, color_scheme = theme_schelling())
 ```
 
@@ -505,9 +456,10 @@ For instance, what would happen if the orange agents are the $2:1$ majority?
 You can control the agent distribution with the `prob` argument in the R base `sample` function.
 
 ```{r schelling-agent-distribution, echo=TRUE}
-schelling_board <- matrix(
-  sample(c(0, 1, 2), prob = c(0.1, 0.60, 0.30), replace = TRUE, size = 400),
-  nrow = 20, ncol = 20
+schelling_board <- create_board(
+  n_states = 3,
+  state_dist = c(0.1, 0.6, 0.3),
+  dims = c(20, 20)
 )
 plot_state(schelling_board, marker_size = 5, color_scheme = theme_schelling())
 ```
@@ -517,20 +469,11 @@ plot_state(schelling_board, marker_size = 5, color_scheme = theme_schelling())
 In the previous examples, we used two different kinds of agents, but you can use more agent types as well.
 
 ```{r schelling-more-agent-types, echo=TRUE}
-schelling_board <- matrix(
-  sample(
-    c(0, 1, 2, 3),
-    prob = c(0.1, 0.30, 0.30, 0.30),
-    replace = TRUE,
-    size = 400
-  ),
-  nrow = 20,
-  ncol = 20
-)
+schelling_board <- create_board(4, c(0.1, 0.3, 0.3, 0.3), c(20, 20))
 plot_state(
   schelling_board,
   marker_size = 5,
-  color_scheme = c("transparent", "gold2", "royalblue", "coral")
+  color_scheme = c(`0` = "transparent", `1` = "gold2", `2` = "royalblue", `3` = "coral")
 )
 ```
 
@@ -541,58 +484,17 @@ plot_state(
 
 ### Conway's Life
 
-```{r life-run, echo=FALSE}
-if (!file.exists("life_results.RDS")) {
-  life_board <- matrix(
-    sample(c(0, 1), prob = c(0.8, 0.2), replace = TRUE, size = 625),
-    nrow = 25, ncol = 25
-  )
-  life_results <- run_automaton(life_board, 100, life_step)
-  readr::write_rds(life_results, "life_results.RDS")  
-} else {
-  life_results <- readr::read_rds("life_results.RDS")
-}
-```
-
-```{r life-demo, echo=TRUE, eval=FALSE}
-life_board <- matrix(
-  sample(c(0, 1), prob = c(0.8, 0.2), replace = TRUE, size = 625),
-  nrow = 25, ncol = 25
-)
+```{r life-demo, echo=TRUE}
+life_board <- create_board(2, c(0.8, 0.2), c(25, 25))
 life_results <- run_automaton(life_board, 100, life_step)
 animate_model_run(life_results, 3, theme_life())
 ```
 
-```{r animate-life, echo=FALSE}
-animate_model_run(life_results, 3, theme_life())
-```
-
-
 
 ### Brian's Brain
 
-```{r run-brians-brain, echo=FALSE}
-if (!file.exists("brians_brain_results.RDS")) {
-  brians_brain_board <- matrix(
-    sample(c(0, 1, 2), prob = c(0.5, 0.25, 0.25), replace = TRUE, size = 2500),
-    nrow = 50, ncol = 50
-  )
-  brians_brain_results <- run_automaton(
-    brians_brain_board,
-    200,
-    brians_brain_step
-  )
-  readr::write_rds(brians_brain_results, "brians_brain_results.RDS")  
-} else {
-  brians_brain_results <- readr::read_rds("brians_brain_results.RDS")
-}
-```
-
-```{r brians-brain-demo, echo=TRUE, eval=FALSE}
-brians_brain_board <- matrix(
-  sample(c(0, 1, 2), prob = c(0.5, 0.25, 0.25), replace = TRUE, size = 2500),
-  nrow = 50, ncol = 50
-)
+```{r brians-brain-demo, echo=TRUE}
+brians_brain_board <- create_board(3, c(0.5, 0.25, 0.25), c(50, 50))
 brians_brain_results <- run_automaton(
   brians_brain_board,
   200,
@@ -606,14 +508,24 @@ animate_model_run(brians_brain_results, 2, theme_brians_brain_dark()) +
   )
 ```
 
-```{r animate-brians-brain}
-animate_model_run(brians_brain_results, 2, theme_brians_brain_dark()) +
-  theme(
-    panel.background = element_rect(fill = "black"),
-    panel.grid.major = element_line(color = "black"),
-    panel.grid.minor = element_line(color = "black")
-  )
+
+### Langton's Ant
+
+```{r}
+langtons_ant_board <- create_ant_grid(
+  antpos = c(36, 36),dims = c(71, 71), antorient = "north"
+)
+langtons_ant_results <- run_automaton(langtons_ant_board, 200, langtons_ant_step)
+animate_model_run(langtons_ant_results, 1, theme_langtons_ant())
 ```
 
+After 10,000 steps:
+
+```{r}
+langtons_ant_results <- run_automaton(langtons_ant_board, 10000, langtons_ant_step)
+langtons_ant_results %>% 
+  filter(step == 10000) %>% 
+  plot_state(1, theme_langtons_ant())
+```
 
 
