@@ -27,7 +27,8 @@ plot_state <- function(state, marker_size = 5, color_scheme = theme_default()) {
     state <- board_to_df(state)
   }
 
-  axis_size <- max(state$row)
+  rows <- max(state$row)
+  cols <- max(state$col)
 
   p <- state %>%
     ggplot2::ggplot(
@@ -36,13 +37,15 @@ plot_state <- function(state, marker_size = 5, color_scheme = theme_default()) {
     ggplot2::geom_point(size = marker_size, shape = 22, color = "transparent") +
     ggplot2::scale_fill_manual(values = color_scheme) +
     ggplot2::scale_x_continuous(
-      minor_breaks = seq(0.5, axis_size + 0.5, 1),
-      breaks = seq(-1, axis_size + 1)
+      minor_breaks = seq(0.5, cols + 0.5, 1),
+      breaks = seq(-1, cols + 1),
+      limits = c(0.5, cols + 0.5)
     ) +
     ggplot2::scale_y_continuous(
       trans = "reverse",
-      minor_breaks = seq(axis_size + 0.5, 0.5, -1),
-      breaks = seq(-1, axis_size + 1)
+      minor_breaks = seq(rows + 1.5, -0.5, -1),
+      breaks = seq(-1, rows + 1),
+      limits = c(rows + 0.5, 0.5)
     ) +
     ggplot2::coord_fixed() +
     ggplot2::theme(

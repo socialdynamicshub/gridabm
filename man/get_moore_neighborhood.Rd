@@ -4,16 +4,16 @@
 \alias{get_moore_neighborhood}
 \title{Get the Moore neighborhood of a specified cell}
 \usage{
-get_moore_neighborhood(i, j, axis_size, periodic = TRUE)
+get_moore_neighborhood(i, j, dims, periodic = TRUE)
 }
 \arguments{
 \item{i}{Row index.}
 
 \item{j}{Column index.}
 
-\item{axis_size}{Grid dimension in each direction.}
-
 \item{periodic}{Whether to employ periodic boundary conditions or not.}
+
+\item{axis_size}{Grid dimension in each direction.}
 }
 \value{
 A list of coordinates of Moore neighborhood cells.

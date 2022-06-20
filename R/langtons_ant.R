@@ -14,11 +14,11 @@
 #' initial_state <- create_ant_grid(c(15, 15), "north", 30)
 #' plot_state(initial_state, 3, theme_langtons_ant())
 create_ant_grid <- function(
-    antpos, axis_size,
+    antpos, dims,
     antorient = "north",
     state_dist = c(1, 0)
 ) {
-  m <- create_grid(2, state_dist, axis_size)
+  m <- create_grid(2, state_dist, dims)
   if (antorient == "north") {
     m[antpos[1], antpos[2]] <- 2
   } else if (antorient == "east") {
@@ -54,10 +54,10 @@ langtons_ant_step <- function(m) {
 
   antpos <- which(m > 1, arr.ind = TRUE)
   antval <- m[antpos[1], antpos[2]]
-  northpos <- get_direct_neighbor(antpos[1], antpos[2], axis_size, "north")
-  eastpos <- get_direct_neighbor(antpos[1], antpos[2], axis_size, "east")
-  southpos <- get_direct_neighbor(antpos[1], antpos[2], axis_size, "south")
-  westpos <- get_direct_neighbor(antpos[1], antpos[2], axis_size, "west")
+  northpos <- get_direct_neighbor(antpos[1], antpos[2], dim(m), "north")
+  eastpos <- get_direct_neighbor(antpos[1], antpos[2], dim(m), "east")
+  southpos <- get_direct_neighbor(antpos[1], antpos[2], dim(m), "south")
+  westpos <- get_direct_neighbor(antpos[1], antpos[2], dim(m), "west")
 
   # cell colors: white => 0, black => 1
 

@@ -16,16 +16,16 @@
 #' @examples
 #' forest <- create_forest(20, 0.6)
 #' plot_state(forest, 5, theme_forest_fire())
-create_forest <- function(axis_size, tree_density) {
+create_forest <- function(dims, tree_density) {
   forest <- matrix(
     sample(
       c(0, 1),
       prob = c(1 - tree_density, tree_density),
       replace = TRUE,
-      size = axis_size^2
+      size = prod(dims)
     ),
-    ncol = axis_size,
-    nrow = axis_size
+    nrow = dims[1],
+    ncol = dims[2]
   )
   forest[, 1] <- forest[, 1] * 2  # set forest on fire!
   return(forest)
@@ -58,11 +58,11 @@ forest_fire_step <- function(forest) {
   axis_size <- dim(forest)[1]
   forest_upd <- forest
 
-  for (equator in 1:axis_size) {
-    for (meridian in 1:axis_size) {
+  for (equator in 1:dim(forest)[1]) {
+    for (meridian in 1:dim(forest)[2]) {
       if (forest[equator, meridian] == 2) {
         positions <- get_von_neumann_neighborhood(
-          equator, meridian, axis_size, periodic = FALSE
+          equator, meridian, dim(forest), periodic = FALSE
         )
         for (pos in positions) {
           if (forest[pos[1], pos[2]] == 1) {
@@ -73,8 +73,8 @@ forest_fire_step <- function(forest) {
     }
   }
 
-  for (i in 1:axis_size) {
-    for (j in 1:axis_size) {
+  for (i in 1:dim(forest)[1]) {
+    for (j in 1:dim(forest)[2]) {
       if (forest[i, j] == 2) {
         forest_upd[i, j] <- 3
       }
