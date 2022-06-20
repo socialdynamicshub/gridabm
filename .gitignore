@@ -1,2 +1,4 @@
 .Rproj.user
 *.RDS
+docs/*_cache
+docs/*_files
