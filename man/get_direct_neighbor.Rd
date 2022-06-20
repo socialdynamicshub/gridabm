@@ -4,14 +4,14 @@
 \alias{get_direct_neighbor}
 \title{Get neighbor position at given orientation}
 \usage{
-get_direct_neighbor(i, j, axis_size, orientation)
+get_direct_neighbor(i, j, dims, orientation)
 }
 \arguments{
 \item{i}{Row index.}
 
 \item{j}{Column index.}
 
-\item{axis_size}{Dimension of the grid in each direction.}
+\item{dims}{Vector containing board dimensions (rows, columns).}
 
 \item{orientation}{One of "north", "east", "south", and "west".}
 }
@@ -22,5 +22,5 @@ The position of the neighbor.
 Get neighbor position at given orientation
 }
 \examples{
-get_direct_neighbor(10, 10, 20, "north")
+get_direct_neighbor(10, 10, c(20, 20), "north")
 }

@@ -4,14 +4,14 @@
 \alias{get_von_neumann_neighborhood}
 \title{Get Von Neumann neighborhood of a specified cell}
 \usage{
-get_von_neumann_neighborhood(i, j, axis_size, periodic = TRUE)
+get_von_neumann_neighborhood(i, j, dims, periodic = TRUE)
 }
 \arguments{
 \item{i}{Row index.}
 
 \item{j}{Column index.}
 
-\item{axis_size}{Grid dimension in each direction.}
+\item{dims}{Vector containing board dimensions (rows, columns).}
 
 \item{periodic}{Whether to employ periodic boundary conditions or not.}
 }

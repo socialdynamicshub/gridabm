@@ -30,9 +30,6 @@ Several well-known automata are implemented in this package (see \code{life_step
 \code{schelling_step}, \code{forest_fire_step}, \code{brians_brain_step}).
 }
 \examples{
-initial_state <- matrix(
-  sample(c(0, 1), replace = TRUE, prob = c(0.7, 0.3), 400),
-  nrow = 20, ncol = 20
-)
+initial_state <- create_board(2, c(0.7, 0.3), c(20, 20))
 run_automaton(initial_state, 50, life_step)
 }

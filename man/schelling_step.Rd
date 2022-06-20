@@ -17,3 +17,14 @@ The updated state
 \description{
 Step the Schelling model
 }
+\examples{
+initial_state <- create_board(3, c(0.1, 0.45, 0.45), c(20, 20))
+
+# Visualize initial state
+plot_state(initial_state, 5, theme_schelling())
+
+next_state <- schelling_step(initial_state, tolerance = 3)
+
+# Visualize subsequent state
+plot_state(next_state, 5, theme_schelling())
+}

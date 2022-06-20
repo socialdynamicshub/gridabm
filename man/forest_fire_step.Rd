@@ -4,10 +4,10 @@
 \alias{forest_fire_step}
 \title{Run the forest fire model one step}
 \usage{
-forest_fire_step(forest)
+forest_fire_step(board)
 }
 \arguments{
-\item{forest}{A \code{matrix} representing a forest.}
+\item{board}{A \code{matrix} representing a forest.}
 }
 \value{
 The updated forest.
@@ -19,7 +19,7 @@ Check out \url{https://en.wikipedia.org/wiki/Forest-fire_model} for more
 information.
 }
 \examples{
-forest <- create_forest(20, 0.6)
+forest <- create_forest_board(c(20, 20), 0.6)
 
 # Visualize the initial state
 plot_state(forest, 5, theme_forest_fire())

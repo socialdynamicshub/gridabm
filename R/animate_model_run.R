@@ -10,28 +10,22 @@
 #' @param color_scheme Which colors to use for which cell state. As the cell
 #'   states are defined by a sequence of integers starting at 0, you can simply
 #'   specify the colors by providing a vector with each entry `i` representing
-#'   the color for state `i`.
+#'   the color for state `i`. To specify colors for specific states, provide a
+#'   named vector, where the names are the cell states in backticks (e.g.,
+#'   c(`0` = "transparent", `1` = "black")).
 #'
 #' @return A gganimate animation.
 #' @export
 #'
 #' @examples
-#' initial_state <- matrix(
-#'   sample(
-#'     c(0, 1, 2, 3),
-#'     replace = TRUE,
-#'     prob = c(0.25, 0.25, 0.25, 0.25),
-#'     400
-#'   ),
-#'   nrow = 20, ncol = 20
-#' )
+#' initial_state <- create_board(4, rep(0.25, 4), c(20, 20))
 #'
 #' results <- run_automaton(initial_state, 100, schelling_step, tolerance = 3)
 #'
 #' animate_model_run(
 #'   results,
 #'   5,
-#'   c("transparent", "gold2", "royalblue", "coral")
+#'   c(`0` = "transparent", `1` = "gold2", `2` = "royalblue", `3` = "coral")
 #' )
 animate_model_run <- function(df, marker_size, color_scheme) {
   anim <- df %>%

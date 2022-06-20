@@ -2,12 +2,12 @@
 % Please edit documentation in R/life.R
 \name{life_step}
 \alias{life_step}
-\title{One step in Conway's Life}
+\title{One step in the Conway's Life automaton}
 \usage{
-life_step(m)
+life_step(board)
 }
 \arguments{
-\item{m}{The current state.}
+\item{board}{The current state.}
 }
 \value{
 A matrix representing the subsequent state
@@ -23,10 +23,7 @@ For more information, check out
 \url{https://en.wikipedia.org/wiki/Conway\%27s_Game_of_Life}.
 }
 \examples{
-initial_state <- matrix(
-  sample(c(0, 1), prob = c(0.7, 0.3), replace = TRUE, 400),
-  nrow = 20, ncol = 20
-)
+initial_state <- create_board(2, c(0.7, 0.3), c(20, 20))
 
 # Visualize initial state
 plot_state(initial_state, 5, theme_life())

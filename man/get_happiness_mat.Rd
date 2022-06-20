@@ -17,3 +17,8 @@ A matrix with corresponding dimensions indicating agent happiness
 \description{
 Compute the happiness of each agent in a Schelling run
 }
+\examples{
+state <- create_board(3, c(0.1, 0.45, 0.45), c(20, 20))
+plot_state(state, 5, theme_schelling())
+get_happiness_mat(state, 3)
+}

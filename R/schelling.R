@@ -6,6 +6,9 @@
 #' @export
 #'
 #' @examples
+#' state <- create_board(3, c(0.1, 0.45, 0.45), c(20, 20))
+#' plot_state(state, 5, theme_schelling())
+#' random_free_pos(state)
 random_free_pos <- function(board) {
   if (!(0 %in% board)) {
     print("There are no free positions.")
@@ -31,6 +34,9 @@ random_free_pos <- function(board) {
 #' @export
 #'
 #' @examples
+#' state <- create_board(3, c(0.1, 0.45, 0.45), c(20, 20))
+#' plot_state(state, 5, theme_schelling())
+#' get_happiness_mat(state, 3)
 get_happiness_mat <- function(board, tolerance) {
   happiness <- matrix(1, nrow = dim(board)[1], ncol = dim(board)[2])
 
@@ -65,6 +71,15 @@ get_happiness_mat <- function(board, tolerance) {
 #' @export
 #'
 #' @examples
+#' initial_state <- create_board(3, c(0.1, 0.45, 0.45), c(20, 20))
+#'
+#' # Visualize initial state
+#' plot_state(initial_state, 5, theme_schelling())
+#'
+#' next_state <- schelling_step(initial_state, tolerance = 3)
+#'
+#' # Visualize subsequent state
+#' plot_state(next_state, 5, theme_schelling())
 schelling_step <- function(board, tolerance) {
   happiness <- get_happiness_mat(board, tolerance)
   board_upd <- board

@@ -1,12 +1,11 @@
 #' Convenience function to create an initial state for the forest fire model
 #'
-#' The forest fire model is often initialized as a square grid where the left
+#' The forest fire model is often initialized as a grid where the left
 #' most column is "on fire".
 #' This function returns an initial state of this kind.
 #' The forest size and the tree density can be provided as well.
 #'
-#' @param axis_size Axis size of the forest. In the `gridabm` library, all
-#'   automata run on square grids, so both dimensions are the same.
+#' @param dims Vector containing board dimensions (rows, columns).
 #' @param tree_density The density of the forest given as a probability for the
 #'   R base `sample` function.
 #'
@@ -14,21 +13,22 @@
 #' @export
 #'
 #' @examples
-#' forest <- create_forest(20, 0.6)
+#' forest <- create_forest_board(c(20, 20), 0.6)
 #' plot_state(forest, 5, theme_forest_fire())
-create_forest <- function(dims, tree_density) {
-  forest <- matrix(
-    sample(
-      c(0, 1),
-      prob = c(1 - tree_density, tree_density),
-      replace = TRUE,
-      size = prod(dims)
-    ),
-    nrow = dims[1],
-    ncol = dims[2]
-  )
-  forest[, 1] <- forest[, 1] * 2  # set forest on fire!
-  return(forest)
+create_forest_board <- function(dims, tree_density) {
+  board <- create_board(2, c(1 - tree_density, tree_density), dims)
+  # board <- matrix(
+  #   sample(
+  #     c(0, 1),
+  #     prob = c(1 - tree_density, tree_density),
+  #     replace = TRUE,
+  #     size = prod(dims)
+  #   ),
+  #   nrow = dims[1],
+  #   ncol = dims[2]
+  # )
+  board[, 1] <- board[, 1] * 2  # set forest on fire!
+  return(board)
 }
 
 #' Run the forest fire model one step
@@ -38,13 +38,13 @@ create_forest <- function(dims, tree_density) {
 #' Check out <https://en.wikipedia.org/wiki/Forest-fire_model> for more
 #' information.
 #'
-#' @param forest A `matrix` representing a forest.
+#' @param board A `matrix` representing a forest.
 #'
 #' @return The updated forest.
 #' @export
 #'
 #' @examples
-#' forest <- create_forest(20, 0.6)
+#' forest <- create_forest_board(c(20, 20), 0.6)
 #'
 #' # Visualize the initial state
 #' plot_state(forest, 5, theme_forest_fire())
@@ -53,33 +53,33 @@ create_forest <- function(dims, tree_density) {
 #'
 #' # Visualize the subsequent state
 #' plot_state(next_state, 5, theme_forest_fire())
-forest_fire_step <- function(forest) {
+forest_fire_step <- function(board) {
 
-  axis_size <- dim(forest)[1]
-  forest_upd <- forest
+  axis_size <- dim(board)[1]
+  board_upd <- board
 
-  for (equator in 1:dim(forest)[1]) {
-    for (meridian in 1:dim(forest)[2]) {
-      if (forest[equator, meridian] == 2) {
+  for (equator in 1:dim(board)[1]) {
+    for (meridian in 1:dim(board)[2]) {
+      if (board[equator, meridian] == 2) {
         positions <- get_von_neumann_neighborhood(
-          equator, meridian, dim(forest), periodic = FALSE
+          equator, meridian, dim(board), periodic = FALSE
         )
         for (pos in positions) {
-          if (forest[pos[1], pos[2]] == 1) {
-            forest_upd[pos[1], pos[2]] <- 2
+          if (board[pos[1], pos[2]] == 1) {
+            board_upd[pos[1], pos[2]] <- 2
           }
         }
       }
     }
   }
 
-  for (i in 1:dim(forest)[1]) {
-    for (j in 1:dim(forest)[2]) {
-      if (forest[i, j] == 2) {
-        forest_upd[i, j] <- 3
+  for (i in 1:dim(board)[1]) {
+    for (j in 1:dim(board)[2]) {
+      if (board[i, j] == 2) {
+        board_upd[i, j] <- 3
       }
     }
   }
 
-  return(forest_upd)
+  return(board_upd)
 }

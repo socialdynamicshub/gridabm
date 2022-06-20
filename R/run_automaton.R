@@ -19,19 +19,16 @@
 #' @export
 #'
 #' @examples
-#' initial_state <- matrix(
-#'   sample(c(0, 1), replace = TRUE, prob = c(0.7, 0.3), 400),
-#'   nrow = 20, ncol = 20
-#' )
+#' initial_state <- create_board(2, c(0.7, 0.3), c(20, 20))
 #' run_automaton(initial_state, 50, life_step)
 run_automaton <- function(initial_state, steps, stepfunc, ...) {
 
-  m <- initial_state
-  d <- board_to_df(m)
+  board <- initial_state
+  d <- board_to_df(board)
   d$step <- 0
   for (i in 1:steps) {
-    m <- stepfunc(m, ...)
-    d_step <- board_to_df(m)
+    board <- stepfunc(board, ...)
+    d_step <- board_to_df(board)
     d_step$step <- i
     d <- dplyr::bind_rows(d, d_step)
   }
