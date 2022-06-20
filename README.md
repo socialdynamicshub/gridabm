@@ -19,7 +19,7 @@ remotes::install_github("socialdynamicshub/gridabm")
 With the `gridabm` library, you can create and visualize automata in a few lines of code.
 
 ```
-schelling_board <- create_grid(
+schelling_board <- create_board(
     n_states = 3,
     state_dist = c(0.1, 0.45, 0.45),
     axis_size = 20
