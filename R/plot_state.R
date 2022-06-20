@@ -40,7 +40,8 @@ plot_state <- function(state, marker_size = 5, color_scheme = theme_default()) {
       breaks = seq(-1, axis_size + 1)
     ) +
     ggplot2::scale_y_continuous(
-      minor_breaks = seq(0.5, axis_size + 0.5, 1),
+      trans = "reverse",
+      minor_breaks = seq(axis_size + 0.5, 0.5, -1),
       breaks = seq(-1, axis_size + 1)
     ) +
     ggplot2::coord_fixed() +
