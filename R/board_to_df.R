@@ -21,20 +21,20 @@ board_to_df <- function(m) {
   warn <- getOption("warn")
   options(warn = -1)  # switch off warnings temporarily
 
-  axis_size <- dim(m)[1]
+  # axis_size <- dim(m)[1]
 
   d <- data.frame(m)
-  names(d) <- c(seq(1, axis_size))
+  names(d) <- c(seq(1, dim(m)[2]))
 
   d <- d %>%
     dplyr::bind_cols(
       data.frame(
-        row = seq(1, axis_size, 1)
+        row = seq(1, dim(m)[1], 1)
       )
     ) %>%
     tidyr::pivot_longer(
       d,
-      cols = seq(1, axis_size),
+      cols = seq(1, dim(m)[2]),
       names_to = "col",
       values_to = "state"
     )  %>%

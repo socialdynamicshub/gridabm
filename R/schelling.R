@@ -11,8 +11,9 @@ random_free_pos <- function(board) {
     print("There are no free positions.")
     return(NULL)
   }
-  axis_size <- dim(board)[1]
-  pos <- sample(1:axis_size, replace = TRUE, 2)
+  pos_x <- sample(1:dim(board)[1], 1)
+  pos_y <- sample(1:dim(board)[2], 1)
+  pos <- c(pos_x, pos_y)
   if (board[pos[1], pos[2]] == 0) {
     return(pos)
   } else {
@@ -31,16 +32,15 @@ random_free_pos <- function(board) {
 #'
 #' @examples
 get_happiness_mat <- function(board, tolerance) {
-  axis_size <- dim(board)[1]
-  happiness <- matrix(1, nrow = axis_size, ncol = axis_size)
+  happiness <- matrix(1, nrow = dim(board)[1], ncol = dim(board)[2])
 
-  for (i in 1:axis_size) {
-    for (j in 1:axis_size) {
+  for (i in 1:dim(board)[1]) {
+    for (j in 1:dim(board)[2]) {
       agent_type <- board[i, j]
       if (agent_type == 0) {
         next
       }
-      positions <- get_moore_neighborhood(i, j, axis_size, periodic = FALSE)
+      positions <- get_moore_neighborhood(i, j, dim(board), periodic = FALSE)
       diff_count <- 0
       for (pos in positions) {
         if (board[pos[1], pos[2]] != agent_type) {
@@ -68,8 +68,8 @@ get_happiness_mat <- function(board, tolerance) {
 schelling_step <- function(board, tolerance) {
   happiness <- get_happiness_mat(board, tolerance)
   board_upd <- board
-  for (i in 1:20) {
-    for (j in 1:20) {
+  for (i in 1:dim(board)[1]) {
+    for (j in 1:dim(board)[2]) {
       if ((happiness[i, j] == 0)) {
         new_pos <- random_free_pos(board_upd)
         board_upd[new_pos[1], new_pos[2]] <- board[i, j]

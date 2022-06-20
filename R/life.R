@@ -27,12 +27,11 @@
 #' # Visualize subsequent state
 #' plot_state(next_state, 5, theme_life())
 life_step <- function(m) {
-  axis_size <- dim(m)[1]
-  m_upd <- matrix(nrow = axis_size, ncol = axis_size, rep(0, axis_size^2))
+  m_upd <- matrix(0, nrow = dim(m)[1], ncol = dim(m)[2])
 
-  for (equator in 1:axis_size) {
-    for (meridian in 1:axis_size) {
-      positions <- get_moore_neighborhood(equator, meridian, axis_size, periodic = TRUE)
+  for (equator in 1:dim(m)[1]) {
+    for (meridian in 1:dim(m)[2]) {
+      positions <- get_moore_neighborhood(equator, meridian, dim(m), periodic = TRUE)
       neigh_sum <- 0
 
       for (pos in positions) {

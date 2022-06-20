@@ -26,11 +26,10 @@
 #' plot_state(next_state, 5, theme_brians_brain_light())
 brians_brain_step <- function(m) {
 
-  axis_size <- dim(m)[1]
-  m_upd <- matrix(nrow = axis_size, ncol = axis_size, rep(0, axis_size^2))
+  m_upd <- matrix(0, nrow = dim(m)[1], ncol = dim(m)[2])
 
-  for (equator in 1:axis_size) {
-    for (meridian in 1:axis_size) {
+  for (equator in 1:dim(m)[1]) {
+    for (meridian in 1:dim(m)[2]) {
 
       if (m[equator, meridian] == 2) {
         m_upd[equator, meridian] <- 0
@@ -40,7 +39,7 @@ brians_brain_step <- function(m) {
         positions <- get_moore_neighborhood(
           equator,
           meridian,
-          axis_size,
+          dim(m),
           periodic = TRUE
         )
         alive_neighbor_count <- 0
