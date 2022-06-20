@@ -1,2 +1,4 @@
 *.RDS
 *.gif
+*_cache
+*_files

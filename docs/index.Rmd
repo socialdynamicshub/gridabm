@@ -278,27 +278,27 @@ One of them is the so-called forest fire simulation [@drossel1992selforganized].
 Let's first create a board.
 The color coding is intended to mimic an actual forest fire:
 Green cells are trees, orange cells are trees on fire, dark red cells are burnt trees, and white cells are empty.
-For the forest fire, there is a convenience function `create_forest` because there is a specific way this model is usually setup.
+For the forest fire, there is a convenience function `create_forest_board` because there is a specific way this model is usually setup.
 You can see in the plot that the trees on the left of the board are all on fire and the rest of the trees are scattered across the board.
 
 ```{r create-forest-demo, echo=TRUE}
-create_forest(dims = c(20, 20), tree_density = 0.7) %>% 
+create_forest_board(dims = c(20, 20), tree_density = 0.7) %>% 
   plot_state(marker_size = 5, color_scheme = theme_forest_fire())
 ```
 
-In the `create_forest` function, we set a parameter `tree_density`.
+In the `create_forest_board` function, we set a parameter `tree_density`.
 This is just the probability with which a tree is put on each cell.
 An example of a sparser forest would look like this:
 
 ```{r sparse-forest, echo=TRUE}
-create_forest(dims = c(20, 20), tree_density = 0.3) %>% 
+create_forest_board(dims = c(20, 20), tree_density = 0.3) %>% 
   plot_state(marker_size = 5, color_scheme = theme_forest_fire())
 ```
 
 ... and a more dense one would look like this:
 
 ```{r dense-forest, echo=TRUE}
-create_forest(dims = c(20, 20), tree_density = 0.9) %>% 
+create_forest_board(dims = c(20, 20), tree_density = 0.9) %>% 
   plot_state(marker_size = 5, color_scheme = theme_forest_fire())
 ```
 
@@ -310,13 +310,10 @@ The rule can be summarized s follows:
 Note that this is a simplified version of the model described by in @drossel1992selforganized.
 
 
-[-------> CONTINUE REFACTORING HERE]
-
-
 You can run and animate the automaton like this:
 
 ```{r forest-1-demo, echo=TRUE}
-forest <- create_forest(c(20, 20), 0.7)
+forest <- create_forest_board(c(20, 20), 0.7)
 forest_results <- run_automaton(forest, 100, forest_fire_step)
 animate_model_run(forest_results, 5, theme_forest_fire())
 ```
@@ -326,7 +323,7 @@ As you can see, a wall of fire runs through the forest pretty quickly.
 Let's see, how this looks like in a less dense forest.
 
 ```{r forest-2-demo, echo=TRUE}
-forest <- create_forest(c(20, 20), 0.5)
+forest <- create_forest_board(c(20, 20), 0.5)
 forest_results <- run_automaton(forest, 100, forest_fire_step)
 animate_model_run(forest_results, 5, theme_forest_fire())
 ```
@@ -337,13 +334,13 @@ Now these animations are nice, but we can go beyond merely looking at the model 
 The `run_automaton` function returns a `data.frame` that contains the results of the model run.
 
 ```{r forest-3-demo, echo=TRUE, eval=FALSE}
-forest <- create_forest(c(20, 20), 0.7)
+forest <- create_forest_board(c(20, 20), 0.7)
 forest_results <- run_automaton(forest, 100, forest_fire_step)
 head(forest_results, 20)
 ```
 
 ```{r forest-3-head, echo=FALSE}
-forest <- create_forest(c(20, 20), 0.7)
+forest <- create_forest_board(c(20, 20), 0.7)
 forest_results <- run_automaton(forest, 100, forest_fire_step)
 head(forest_results, 20) %>% knitr::kable()
 ```
@@ -351,12 +348,12 @@ head(forest_results, 20) %>% knitr::kable()
 
 Let's look how tree density is related to how quickly the fire runs through the forest and how much of the forest is burnt.
 
-```{r forest-multi-demo, echo=TRUE, eval=FALSE}
+```{r forest-multi-demo, echo=TRUE}
 # Run 5 replicates of the model
 d <- data.frame()
 for (density in seq(0.1, 0.9, 0.1)) {
   for (replicate in seq(1, 5, 1)) {
-    forest <- create_forest(c(20, 20), density)
+    forest <- create_forest_board(c(20, 20), density)
     forest_results <- run_automaton(forest, 100, forest_fire_step)
     forest_results$density <- density
     forest_results$replicate <- replicate
@@ -511,21 +508,38 @@ animate_model_run(brians_brain_results, 2, theme_brians_brain_dark()) +
 
 ### Langton's Ant
 
-```{r}
-langtons_ant_board <- create_ant_grid(
+```{r, echo=TRUE, eval=FALSE}
+langtons_ant_board <- create_ant_board(
   antpos = c(36, 36),dims = c(71, 71), antorient = "north"
 )
 langtons_ant_results <- run_automaton(langtons_ant_board, 200, langtons_ant_step)
 animate_model_run(langtons_ant_results, 1, theme_langtons_ant())
 ```
 
+```{r}
+langtons_ant_board <- create_ant_board(
+  antpos = c(36, 36),dims = c(71, 71), antorient = "north"
+)
+langtons_ant_results <- run_automaton(langtons_ant_board, 200, langtons_ant_step)
+```
+
+```{r}
+animate_model_run(langtons_ant_results, 1, theme_langtons_ant())
+```
+
 After 10,000 steps:
 
 ```{r}
-langtons_ant_results <- run_automaton(langtons_ant_board, 10000, langtons_ant_step)
-langtons_ant_results %>% 
-  filter(step == 10000) %>% 
-  plot_state(1, theme_langtons_ant())
+langtons_ant_board <- create_ant_board(
+  antpos = c(76, 76),dims = c(151, 151), antorient = "west"
+)
+tmp_state <- langtons_ant_board
+for (i in 1:12000) {
+  next_state <- langtons_ant_step(tmp_state)
+  tmp_state <- next_state
+}
+plot_state(tmp_state, 0.5, theme_langtons_ant())
 ```
+
 
 
