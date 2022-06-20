@@ -15,3 +15,8 @@ Coordinates of a random free position
 \description{
 Find a random free position in the Schelling game
 }
+\examples{
+state <- create_board(3, c(0.1, 0.45, 0.45), c(20, 20))
+plot_state(state, 5, theme_schelling())
+random_free_pos(state)
+}

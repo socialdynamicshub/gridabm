@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_state.R
 \name{plot_state}
 \alias{plot_state}
-\title{Plot a grid ABM state}
+\title{Plot a cellular automaton state}
 \usage{
 plot_state(state, marker_size = 5, color_scheme = theme_default())
 }
@@ -26,9 +26,6 @@ The default color palette used is based on the \code{Dark2} palette from
 \code{RColorBrewer}.
 }
 \examples{
-state <- matrix(
-  sample(c(0, 1, 2, 3), replace = TRUE, prob = c(0.1, 0.3, 0.3, 0.3), 400),
-  nrow = 20, ncol = 20
-)
+state <- create_board(4, c(0.1, 0.3, 0.3, 0.3), c(20, 20))
 plot_state(state)
 }

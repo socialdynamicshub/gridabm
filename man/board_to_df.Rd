@@ -15,14 +15,11 @@ The \code{data.frame} representation of the automaton state.
 \description{
 Automaton states are represented as \code{matrix} objects in the \code{gridabm}
 library.
-However, \code{data.frame}s are more easy to plot, so this function converts a
-\code{matrix} into a \code{data.frame}.
+However, \code{data.frame}s are more convenient for plotting, so this function
+converts a state \code{matrix} into a \code{data.frame}.
 }
 \examples{
-automaton_state <- matrix(
-  sample(c(0, 1), replace = TRUE, prob = c(0.5, 0.5), 100),
-  nrow = 10, ncol = 10
-)
+automaton_state <- create_board(2, c(0.5, 0.5), c(10, 10))
 
 board_to_df(automaton_state)
 }

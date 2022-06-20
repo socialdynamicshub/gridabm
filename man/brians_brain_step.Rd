@@ -16,14 +16,11 @@ A matrix representing the subsequent state.
 \description{
 Brian's Brain is an automaton with three distinct states that produces some
 characteristic chaotic patterns.
-The function is usually given as the \code{stepfunc} argument to \code{run_automaton}.
+This function is usually given as the \code{stepfunc} argument to \code{run_automaton}.
 Check out \url{https://en.wikipedia.org/wiki/Brian's_Brain} for more information.
 }
 \examples{
-initial_state <- matrix(
-  sample(c(0, 1, 2), replace = TRUE, prob = c(0.5, 0.25, 0.25), 200),
-  nrow = 20, ncol = 20
-)
+initial_state <- create_board(3, c(0.5, 0.25, 0.25), c(20, 20))
 
 # Visualization of the initial state
 plot_state(initial_state, 5, theme_brians_brain_light())

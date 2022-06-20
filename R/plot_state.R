@@ -1,4 +1,4 @@
-#' Plot a grid ABM state
+#' Plot a cellular automaton state
 #'
 #' All visualizations in the `gridabm` library are `ggplot2` objects and can be
 #' customized accordingly.
@@ -16,10 +16,7 @@
 #' @export
 #'
 #' @examples
-#' state <- matrix(
-#'   sample(c(0, 1, 2, 3), replace = TRUE, prob = c(0.1, 0.3, 0.3, 0.3), 400),
-#'   nrow = 20, ncol = 20
-#' )
+#' state <- create_board(4, c(0.1, 0.3, 0.3, 0.3), c(20, 20))
 #' plot_state(state)
 plot_state <- function(state, marker_size = 5, color_scheme = theme_default()) {
 
@@ -27,8 +24,8 @@ plot_state <- function(state, marker_size = 5, color_scheme = theme_default()) {
     state <- board_to_df(state)
   }
 
-  rows <- max(state$row)
-  cols <- max(state$col)
+  n_rows <- max(state$row)
+  n_cols <- max(state$col)
 
   p <- state %>%
     ggplot2::ggplot(
@@ -37,15 +34,15 @@ plot_state <- function(state, marker_size = 5, color_scheme = theme_default()) {
     ggplot2::geom_point(size = marker_size, shape = 22, color = "transparent") +
     ggplot2::scale_fill_manual(values = color_scheme) +
     ggplot2::scale_x_continuous(
-      minor_breaks = seq(0.5, cols + 0.5, 1),
-      breaks = seq(-1, cols + 1),
-      limits = c(0.5, cols + 0.5)
+      minor_breaks = seq(0.5, n_cols + 0.5, 1),
+      breaks = seq(-1, n_cols + 1),
+      limits = c(0.5, n_cols + 0.5)
     ) +
     ggplot2::scale_y_continuous(
       trans = "reverse",
-      minor_breaks = seq(rows + 1.5, -0.5, -1),
-      breaks = seq(-1, rows + 1),
-      limits = c(rows + 0.5, 0.5)
+      minor_breaks = seq(n_rows + 1.5, -0.5, -1),
+      breaks = seq(-1, n_rows + 1),
+      limits = c(n_rows + 0.5, 0.5)
     ) +
     ggplot2::coord_fixed() +
     ggplot2::theme(

@@ -11,9 +11,9 @@ get_moore_neighborhood(i, j, dims, periodic = TRUE)
 
 \item{j}{Column index.}
 
-\item{periodic}{Whether to employ periodic boundary conditions or not.}
+\item{dims}{Vector containing board dimensions (rows, columns).}
 
-\item{axis_size}{Grid dimension in each direction.}
+\item{periodic}{Whether to employ periodic boundary conditions or not.}
 }
 \value{
 A list of coordinates of Moore neighborhood cells.
@@ -22,5 +22,5 @@ A list of coordinates of Moore neighborhood cells.
 Get the Moore neighborhood of a specified cell
 }
 \examples{
-get_moore_neighborhood(5, 5, 20)
+get_moore_neighborhood(5, 5, c(20, 20))
 }

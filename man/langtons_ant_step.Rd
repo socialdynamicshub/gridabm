@@ -2,12 +2,12 @@
 % Please edit documentation in R/langtons_ant.R
 \name{langtons_ant_step}
 \alias{langtons_ant_step}
-\title{One step in Langton's Ant}
+\title{One step in the Langton's Ant automaton}
 \usage{
-langtons_ant_step(m)
+langtons_ant_step(board)
 }
 \arguments{
-\item{m}{A \code{matrix} representing the current state.}
+\item{board}{A \code{matrix} representing the current state.}
 }
 \value{
 A \code{matrix} representing the next state according to Langton's Ant.
@@ -17,4 +17,15 @@ Langton's Ant is a cellular automaton where an "ant" moves across the grid
 leaving behind black or white cells according to a specific rule.
 For more information, check out
 \url{https://en.wikipedia.org/wiki/Langton\%27s_ant}.
+}
+\examples{
+initial_state <- create_ant_board(c(10, 10), c(20, 20), "north")
+
+# Visualize initial state
+plot_state(initial_state, 5, theme_langtons_ant())
+
+next_state <- langtons_ant_step(initial_state)
+
+# Visualize next state
+plot_state(next_state, 5, theme_langtons_ant())
 }
